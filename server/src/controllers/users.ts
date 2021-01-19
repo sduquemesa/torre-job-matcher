@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
-import { IUserData } from '../types/IUser';
+import { IUserData } from '../types';
 
-export class Worker {
+export default class Worker {
 
     /**
      * Constructor.
@@ -38,7 +38,8 @@ export class Worker {
                 name: torre_user_data.person.name,
                 picture: torre_user_data.person.picture,
                 professionalHeadline: torre_user_data.person.professionalHeadline,
-                summaryOfBio: torre_user_data.person.summaryOfBio
+                summaryOfBio: torre_user_data.person.summaryOfBio,
+                username: Worker.username
             };
         } else {
             user_data = undefined;
@@ -46,7 +47,7 @@ export class Worker {
 
         return user_data;
         
-    }
+    } /* End of getUserData() */
 
 
 } /* End of class */

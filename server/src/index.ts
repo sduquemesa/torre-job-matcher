@@ -2,8 +2,8 @@ import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
 import axios, {AxiosResponse} from 'axios';
-import {IUserData} from './types/IUser';
-import * as User from './controllers/users';
+import {IUserData, IJobData} from './types';
+import {UsersWorker, JobsWorker} from './controllers';
 
 // Create Express app
 const app: Express = express();
@@ -41,7 +41,7 @@ app.get('/api/user/:username',
   async (inRequest: Request, inResponse: Response) => {
     console.log(`GET /api/users/${inRequest.params.username}`);
     try {
-      const userWorker: User.Worker = new User.Worker(inRequest.params.username);
+      const userWorker: UsersWorker = new UsersWorker(inRequest.params.username);
       const user_data: IUserData | undefined = await userWorker.getUserData();
       inResponse.json(user_data);
     } catch (error) {
@@ -86,8 +86,9 @@ app.get('/api/jobs/:id',
   async (inRequest: Request, inResponse: Response) => {
     console.log(`GET /api/jobs/${inRequest.params.id}`);
     try {
-      const response = await axios.get(`https://torre.co/api/opportunities/${inRequest.params.id}`);
-      inResponse.json(response.data);
+      const jobsWorker: JobsWorker = new JobsWorker(inRequest.params.id);
+      const job_data: IJobData | undefined = await jobsWorker.getJobData();
+      inResponse.json(job_data);
     } catch (error) {
       console.log(error);
       inResponse.send('error');

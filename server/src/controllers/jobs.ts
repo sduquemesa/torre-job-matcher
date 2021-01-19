@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IJobData, IUserData } from '../types';
+import { IJobData } from '../types';
 
 export default class Worker {
 

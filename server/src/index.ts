@@ -1,9 +1,8 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
-import axios, {AxiosResponse} from 'axios';
-import {IUserData, IJobData} from './types';
-import {UsersWorker, JobsWorker} from './controllers';
+import {IUserData, IJobData, ISearchData} from './types';
+import {UsersWorker, JobsWorker, SearchWorker} from './controllers';
 
 // Create Express app
 const app: Express = express();
@@ -56,24 +55,17 @@ app.get('/api/jobs/search',
   async (inRequest: Request, inResponse: Response) => {
     console.log(`GET /api/jobs/search`);
     try {
-      // Access the provided query parameters
-      const query_params = {
-        offset: inRequest.query.offset,
-        size: inRequest.query.size,
-        text: inRequest.query.text
-      };
-      const response: AxiosResponse = await axios({
-        method: 'post',
-        url: `https://search.torre.co/opportunities/_search/?offset=${query_params.offset}&size=${query_params.size}`,
-        headers: {},
-        data: {
-          "skill/role": {
-            "text": query_params.text,
-            "experience": "potential-to-develop"
-          }
-        }
-      });
-      inResponse.json(response.data);
+      // Get the text query of the search
+      const text_query: any = inRequest.query.text;
+
+      if (text_query !== undefined) {
+        const searchWorker: SearchWorker = new SearchWorker(text_query);
+        const job_results: ISearchData[] | undefined = await searchWorker.getJobs();
+        inResponse.json(job_results);
+      } else {
+        inResponse.json({error: 'invalid text query'});
+      }
+
     } catch (error) {
       inResponse.send('error');
     }

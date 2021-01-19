@@ -54,10 +54,13 @@ app.get('/api/jobs/search',
     console.log(`GET /api/jobs/search`);
     try {
       // Access the provided query parameters
-      let offset = inRequest.query.offset;
-      let size = inRequest.query.size;
-      let aggregate = inRequest.query.aggregate;
-      inResponse.json(`GET /api/jobs/search/?offset=${offset}&size=${size}&aggregate=${aggregate}`);
+      const query_params = {
+        offset: inRequest.query.offset,
+        size: inRequest.query.size,
+        aggregate: inRequest.query.aggregate
+      };
+      const response = await axios.post('https://search.torre.co/opportunities/_search', query_params);
+      inResponse.json(response.data);
     } catch (error) {
       inResponse.send('error');
     }

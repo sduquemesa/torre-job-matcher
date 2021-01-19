@@ -2,6 +2,8 @@ import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
 import axios, {AxiosResponse} from 'axios';
+import {IUserData} from './types/IUser';
+import * as User from './controllers/users';
 
 // Create Express app
 const app: Express = express();
@@ -39,8 +41,9 @@ app.get('/api/user/:username',
   async (inRequest: Request, inResponse: Response) => {
     console.log(`GET /api/users/${inRequest.params.username}`);
     try {
-      const response = await axios.get(`https://bio.torre.co/api/bios/${inRequest.params.username}`);
-      inResponse.json(response.data);
+      const userWorker: User.Worker = new User.Worker(inRequest.params.username);
+      const user_data: IUserData | undefined = await userWorker.getUserData();
+      inResponse.json(user_data);
     } catch (error) {
       console.log(error);
       inResponse.send('error');

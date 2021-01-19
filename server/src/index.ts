@@ -1,7 +1,7 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
-const axios = require('axios').default;
+import axios, {AxiosResponse} from 'axios';
 
 // Create Express app
 const app: Express = express();
@@ -57,9 +57,19 @@ app.get('/api/jobs/search',
       const query_params = {
         offset: inRequest.query.offset,
         size: inRequest.query.size,
-        aggregate: inRequest.query.aggregate
+        text: inRequest.query.text
       };
-      const response = await axios.post('https://search.torre.co/opportunities/_search', query_params);
+      const response: AxiosResponse = await axios({
+        method: 'post',
+        url: `https://search.torre.co/opportunities/_search/?offset=${query_params.offset}&size=${query_params.size}`,
+        headers: {},
+        data: {
+          "skill/role": {
+            "text": query_params.text,
+            "experience": "potential-to-develop"
+          }
+        }
+      });
       inResponse.json(response.data);
     } catch (error) {
       inResponse.send('error');

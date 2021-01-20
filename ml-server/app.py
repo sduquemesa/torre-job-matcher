@@ -10,8 +10,7 @@ def hello():
 @app.route('/match', methods=['POST'])
 def match():
     json = request.get_json()
-
-    return analize.parse_data(json)
+    return analize.analize(json)
 
 
 

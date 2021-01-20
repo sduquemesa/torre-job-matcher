@@ -33,20 +33,16 @@ def parse_data(data: dict) -> dict:
     
     # Get and merge job data into a single document per job
     job_data = data['jobs_data']
-    strenghts_list = []
     for job in job_data:
         flattened_text = ' '.join(job['job_data']['details'] + [job['job_data']['objective']])
         job['job_data']['as_document'] = flattened_text
 
-        strenghts_list.append(job['job_data']['strengths'])
-
-    strenghts_stats = dict(Counter(list(itertools.chain(*strenghts_list))))
 
     # Get and merge user data into a single document per job
     user_data = data['user_data']
     user_data['as_document'] = ' '.join([user_data['professionalHeadline'],user_data['summaryOfBio']])
 
-    return {'jobs_data': job_data, 'user_data': user_data, 'required_strengths': strenghts_stats}
+    return {'jobs_data': job_data, 'user_data': user_data}
 
 def tokenize_documents(data: dict) -> dict:
     ''' tokenize documents and remove stopwords
@@ -54,6 +50,7 @@ def tokenize_documents(data: dict) -> dict:
 
     tokenizer = RegexpTokenizer(r'\w+')
     docs = []
+    strenghts_list = []
     flat_text = ''
 
     # from jobs info
@@ -65,6 +62,11 @@ def tokenize_documents(data: dict) -> dict:
                         for sentence in sentence_tokens]
         job['job_data']['tokens'] = word_tokens
         docs.append(list(itertools.chain(*word_tokens)))
+
+        strenghts_list.append(job['job_data']['strengths'])
+
+    strenghts_stats = Counter(list(itertools.chain(*strenghts_list))).most_common(10)
+    strenghts_dict = [{'name': name, 'frequency': freq} for name, freq in strenghts_stats]
 
     # from user info
     user_data = data['user_data']
@@ -92,9 +94,12 @@ def tokenize_documents(data: dict) -> dict:
     # print(list(enumerate(sims)))  # print (document_number, document_similarity) 2-tuples
 
     sims = sorted(enumerate(sims), key=lambda item: -item[1])
-    for doc_position, doc_score in sims:
-        print(doc_score, jobs_data[doc_position]['id'])
+    # for doc_position, doc_score in sims:
+    #     print(doc_score, jobs_data[doc_position]['id'])
 
+    job_similarity_list = [{'id':jobs_data[doc_position]['id'],'score': str(doc_score)} for doc_position, doc_score in sims ]
+    # job_similarity_list = [{'id':1,'score':1} for doc_position, doc_score in sims ]
+    job_similarity_mean = np.mean([ doc_score for doc_position, doc_score in sims ])
 
     # Summarize
     summary = summarize(flat_text, word_count = 100).replace('•', ' ')
@@ -104,7 +109,14 @@ def tokenize_documents(data: dict) -> dict:
     keywords_list = [key for key, grp in itertools.groupby([ps.stem(keyword) for keyword in keywords(flat_text).split('\n')])]
     # print(keywords_list)
 
-    return data
+    analysis_result = {'summary': summary,
+                        'keywords': keywords_list[:10],
+                        'global_match_score': str(job_similarity_mean), 
+                        'job_score': job_similarity_list,
+                        'strenght_stats': strenghts_dict
+                        }
+
+    return analysis_result
 
 
 
@@ -113,7 +125,7 @@ def analize(data: dict):
     """
 
     data = parse_data(data)
-    data = tokenize_documents(data)
+    result = tokenize_documents(data)
 
 
-    return data
+    return result

@@ -20,7 +20,7 @@ from gensim import similarities
 
 import numpy as np
 
-def parse_data(data: dict) -> dict:
+def parse_data(data):
     """Gets data posted to the match endpoint and prepares it for analysis
     
     @params: 
@@ -43,7 +43,7 @@ def parse_data(data: dict) -> dict:
 
     return {'jobs_data': job_data, 'user_data': user_data}
 
-def tokenize_documents(data: dict) -> dict:
+def tokenize_documents(data):
     ''' tokenize documents and remove stopwords
     '''
 
@@ -119,7 +119,7 @@ def tokenize_documents(data: dict) -> dict:
 
 
 
-def analize(data: dict):
+def analize(data):
 
     data = parse_data(data)
     result = tokenize_documents(data)

@@ -9,7 +9,6 @@ from nltk.stem import PorterStemmer
 ps = PorterStemmer() 
 
 import nltk
-nltk.download('punkt')
 
 import gensim
 from gensim.summarization import keywords
@@ -121,8 +120,6 @@ def tokenize_documents(data: dict) -> dict:
 
 
 def analize(data: dict):
-    """
-    """
 
     data = parse_data(data)
     result = tokenize_documents(data)

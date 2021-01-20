@@ -12,7 +12,5 @@ def match():
     json = request.get_json()
     return analize.analize(json)
 
-
-
 if __name__ == '__main__':
     app.run()

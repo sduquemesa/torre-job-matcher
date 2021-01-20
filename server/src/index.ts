@@ -1,8 +1,8 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
-import {IUserData, IJobData, ISearchData, ISearchQueryParams, IMatchQueryParams} from './types';
-import {UsersWorker, JobsWorker, SearchWorker} from './controllers';
+import {IUserData, IJobData, ISearchData, ISearchQueryParams, IMatchQueryParams, IMatchData} from './types';
+import {UsersWorker, JobsWorker, SearchWorker, MatchWorker } from './controllers';
 
 // Create Express app
 const app: Express = express();

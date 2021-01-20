@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IMatchQueryParams } from '../types'
+import { IMatchQueryParams, IMatchData } from '../types'
 
 export default class Worker {
 
@@ -19,19 +19,14 @@ export default class Worker {
      * @return raw analysed data from server
      */
     private async postDataToAnalyse() {
-        const search_results: AxiosResponse = await axios({
+        const data_results: AxiosResponse = await axios({
             method: 'post',
             url: `http://localhost:5000/match`,
             headers: {'Content-Type': 'application/json'},
-            data: {
-                "skill/role": {
-                    "text": Worker.search_text,
-                    "experience": "potential-to-develop"
-                }
-            }
+            data: Worker.query_params
         });
-        return search_results.data;
-    }
+        return data_results.data;
+    } /* End of postDataToAnalyse */
 
     /**
      * getMatchData: Sends all user and job data to the
@@ -41,7 +36,11 @@ export default class Worker {
      */
     public async getMatchData(): Promise<IMatchData> {
         console.log('Match.Worker.getMatchData()');
-    }
+        const data = this.postDataToAnalyse();
+        console.log(data);
+        return data;
+
+    } /* End of getMatchData */
 
 
 } /* End Class */

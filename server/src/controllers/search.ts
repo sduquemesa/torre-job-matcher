@@ -63,9 +63,8 @@ export default class Worker {
                 job_data: job_data
             })
         }
-
-        query_params.offset = query_params.offset + query_params.size;
-        console.log(`Search results ${job_results.length}/${search_results.total}`);
+ 
+        console.log(`Search results: ${job_results.length}/${search_results.total}`);
 
 
         return job_results;

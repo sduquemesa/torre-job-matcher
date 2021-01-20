@@ -4,4 +4,5 @@ export default interface IUserData {
     professionalHeadline: string,
     summaryOfBio: string,
     username?: string
+    strengths: any,
 }

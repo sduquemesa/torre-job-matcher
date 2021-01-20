@@ -39,6 +39,7 @@ export default class Worker {
                 picture: torre_user_data.person.picture,
                 professionalHeadline: torre_user_data.person.professionalHeadline,
                 summaryOfBio: torre_user_data.person.summaryOfBio,
+                strengths: torre_user_data.strengths.map( (strenght: any) => {return strenght.name} ),
                 username: Worker.username
             };
         } else {

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { query } from 'express';
-import { ISearchData, ISearchQueryParams } from '../types';
+import { ISearchData, ISearchQueryParams, ITorreSearchQueryParams, IJobData } from '../types';
+import { JobsWorker } from './';
 
 export default class Worker {
 
@@ -8,15 +8,17 @@ export default class Worker {
      * Constructor.
      */
     private static search_text: string;
-    constructor(in_search_text: string) {
-        console.log("Search.Worker.constructor", in_search_text);
-        Worker.search_text = in_search_text;
+    private static query_params: ISearchQueryParams;
+    constructor(in_query_params: ISearchQueryParams) {
+        console.log("Search.Worker.constructor", in_query_params);
+        Worker.search_text = in_query_params.text_query;
+        Worker.query_params = in_query_params;
     } /* End constructor(). */
 
     /**
      * getSearchResultsFromTorre: Perform search using Torre API
      */
-    private async getSearchResultsFromTorre(query_params: ISearchQueryParams): Promise<AxiosResponse> {
+    private async getSearchResultsFromTorre(query_params: ITorreSearchQueryParams): Promise<AxiosResponse> {
 
         const search_results: AxiosResponse = await axios({
             method: 'post',
@@ -44,27 +46,28 @@ export default class Worker {
 
         const job_results: ISearchData[] = [];
 
-        const query_params: ISearchQueryParams = {
-            offset: 0,
-            size: 5000,
+        const query_params: ITorreSearchQueryParams = {
+            offset: (Worker.query_params.offset === undefined) ? 0 : Worker.query_params.offset,
+            size: (Worker.query_params.size === undefined) ? 20 : Worker.query_params.size,
             aggregate: false
         }
 
         let search_results: any;
-        do {
-            search_results = await this.getSearchResultsFromTorre(query_params);
-            job_results.push(
-                ...search_results.results.map( (result: any): ISearchData => {
-                    return {
-                        id: result.id
-                    }
-                })
-            );
-            query_params.offset = query_params.offset + query_params.size;
-            // console.log(`Search results ${job_results.length}/${search_results.total}`);
+        search_results = await this.getSearchResultsFromTorre(query_params);
 
-        } while (search_results.results.length !== 0);
-        
+        for await (const result of search_results.results) {
+            const jobsWorker: JobsWorker = new JobsWorker(result.id);
+            const job_data: IJobData | undefined = await jobsWorker.getJobData();
+            job_results.push({
+                id: result.id,
+                job_data: job_data
+            })
+        }
+
+        query_params.offset = query_params.offset + query_params.size;
+        console.log(`Search results ${job_results.length}/${search_results.total}`);
+
+
         return job_results;
 
     } /* End of getJobs() */

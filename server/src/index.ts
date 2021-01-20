@@ -1,7 +1,7 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
-import {IUserData, IJobData, ISearchData} from './types';
+import {IUserData, IJobData, ISearchData, ISearchQueryParams} from './types';
 import {UsersWorker, JobsWorker, SearchWorker} from './controllers';
 
 // Create Express app
@@ -55,11 +55,16 @@ app.get('/api/jobs/search',
   async (inRequest: Request, inResponse: Response) => {
     console.log(`GET /api/jobs/search`);
     try {
-      // Get the text query of the search
-      const text_query: any = inRequest.query.text;
+      const query_params: ISearchQueryParams = {
+        text_query: inRequest.query.text,
+        size: inRequest.query.size,
+        offset: inRequest.query.offset,
+        aggregate: inRequest.query.aggregate
+      }
 
-      if (text_query !== undefined) {
-        const searchWorker: SearchWorker = new SearchWorker(text_query);
+
+      if (query_params.text_query !== undefined) {
+        const searchWorker: SearchWorker = new SearchWorker(query_params);
         const job_results: ISearchData[] | undefined = await searchWorker.getJobs();
         inResponse.json(job_results);
       } else {
@@ -67,6 +72,7 @@ app.get('/api/jobs/search',
       }
 
     } catch (error) {
+      console.log(error);
       inResponse.send('error');
     }
   }

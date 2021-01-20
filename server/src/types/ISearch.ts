@@ -6,7 +6,15 @@ export default interface ISearchData {
 }
 
 export interface ISearchQueryParams {
+    offset: any,
+    size: any,
+    aggregate: any,
+    text_query: any
+}
+
+export interface ITorreSearchQueryParams {
     offset: number,
     size: number,
-    aggregate: false
+    aggregate: boolean
 }
+

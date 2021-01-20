@@ -17,6 +17,8 @@ export default class Worker {
 
     /**
      * getSearchResultsFromTorre: Perform search using Torre API
+     * 
+     * @return data from search results
      */
     private async getSearchResultsFromTorre(query_params: ITorreSearchQueryParams): Promise<AxiosResponse> {
 

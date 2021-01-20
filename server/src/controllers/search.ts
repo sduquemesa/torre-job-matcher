@@ -61,10 +61,12 @@ export default class Worker {
         for await (const result of search_results.results) {
             const jobsWorker: JobsWorker = new JobsWorker(result.id);
             const job_data: IJobData | undefined = await jobsWorker.getJobData();
-            job_results.push({
-                id: result.id,
-                job_data: job_data
-            })
+            if (job_data !== undefined) {
+                job_results.push({
+                    id: result.id,
+                    job_data: job_data
+                })
+            }
         }
  
         console.log(`Search results: ${job_results.length}/${search_results.total}`);

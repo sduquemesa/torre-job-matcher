@@ -18,8 +18,15 @@ export default class Worker {
      * @return Object with job info from JSON response.
      */
     private async getJobFromTorre(): Promise<AxiosResponse> {
-        const job_data: AxiosResponse = await axios.get(`https://torre.co/api/opportunities/${Worker.job_id}`);
+        let job_data: AxiosResponse;
+        job_data = await axios.get(
+            `https://torre.co/api/opportunities/${Worker.job_id}`, 
+            {validateStatus: function (status) {
+                return true;
+            }}
+        );
         return job_data.data
+
     } /* End of getJobFromTorre() */
 
     /**

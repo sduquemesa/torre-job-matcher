@@ -10,6 +10,7 @@ nltk.download('punkt')
 
 import gensim
 
+import numpy as np
 
 def parse_data(data: dict) -> dict:
     """Gets data posted to the match endpoint and prepares it for analysis
@@ -52,7 +53,7 @@ def tokenize_documents(data: dict) -> dict:
         word_tokens = [[word.lower() for word in tokenizer.tokenize(sentence) if word.lower() not in stop_words]
                         for sentence in sentence_tokens]
         job['job_data']['tokens'] = word_tokens
-        docs.extend([word for word in word_tokens])
+        docs.extend([sentence for sentence in word_tokens])
 
 
     # from user info
@@ -61,11 +62,32 @@ def tokenize_documents(data: dict) -> dict:
     word_tokens = [[word.lower() for word in tokenizer.tokenize(sentence) if word.lower() not in stop_words]
                         for sentence in sentence_tokens]
     user_data['tokens'] = word_tokens
-    docs.extend([word for word in word_tokens])
 
     # create dictionary
     dictionary = gensim.corpora.Dictionary(docs)
-    print(dictionary)
+    
+    # create corpus
+    corpus = [dictionary.doc2bow(doc) for doc in docs]
+
+    # TF-IDF
+    tf_idf = gensim.models.TfidfModel(corpus)
+    # for doc in tf_idf[corpus]:
+    #     print([[dictionary[id], np.around(freq, decimals=2)] for id, freq in doc])
+
+
+    # similarity measure
+    sims = gensim.similarities.Similarity('./service/index_data',tf_idf[corpus],
+                                        num_features=len(dictionary))
+
+    # create query document from user info, update an existing dictionary and create bag of words
+    print(user_data['tokens'])
+    user_doc_bow = dictionary.doc2bow(list(itertools.chain(*user_data['tokens'])))
+
+    # perform a similarity query against the corpus
+    query_doc_tf_idf = tf_idf[user_doc_bow]
+    print('Comparing Result:', sims[query_doc_tf_idf])
+    print(np.mean(sims[query_doc_tf_idf]))
+    print(np.max(sims[query_doc_tf_idf]))
 
     return data
 

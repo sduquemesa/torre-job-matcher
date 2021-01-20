@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
-app = Flask(__name__)
+from service import analize
 
+app = Flask(__name__)
 
 @app.route('/')
 def hello():
@@ -9,9 +10,8 @@ def hello():
 @app.route('/match', methods=['POST'])
 def match():
     json = request.get_json()
-    
 
-    return 
+    return analize.parse_data(json)
 
 
 

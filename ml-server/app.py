@@ -8,10 +8,10 @@ def hello():
 
 @app.route('/match', methods=['POST'])
 def match():
-    json_ = request.get_json()
-    print(json_)
+    json = request.get_json()
+    
 
-    return jsonify(json_)
+    return 
 
 
 

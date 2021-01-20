@@ -3,4 +3,4 @@
 */dist
 ml-server/env
 *.pyc
-__pycache__/
+*/__pycache__/

@@ -52,7 +52,7 @@ def tokenize_documents(data: dict) -> dict:
         word_tokens = [[word.lower() for word in tokenizer.tokenize(sentence) if word.lower() not in stop_words]
                         for sentence in sentence_tokens]
         job['job_data']['tokens'] = word_tokens
-        docs.append[word_tokens]
+        docs.extend([word for word in word_tokens])
 
 
     # from user info
@@ -61,18 +61,13 @@ def tokenize_documents(data: dict) -> dict:
     word_tokens = [[word.lower() for word in tokenizer.tokenize(sentence) if word.lower() not in stop_words]
                         for sentence in sentence_tokens]
     user_data['tokens'] = word_tokens
-    docs.append[word_tokens]
+    docs.extend([word for word in word_tokens])
 
     # create dictionary
     dictionary = gensim.corpora.Dictionary(docs)
     print(dictionary)
 
     return data
-
-def create_corpus(data: dict) -> dict:
-
-    # Create bag of words
-
 
 
 
@@ -82,7 +77,6 @@ def analize(data: dict):
 
     data = parse_data(data)
     data = tokenize_documents(data)
-    data = create_corpus(data)
 
 
     return data

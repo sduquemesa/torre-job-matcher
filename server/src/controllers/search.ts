@@ -46,14 +46,14 @@ export default class Worker {
 
         const job_results: ISearchData[] = [];
 
-        const query_params: ITorreSearchQueryParams = {
+        const torre_query_params: ITorreSearchQueryParams = {
             offset: (Worker.query_params.offset === undefined) ? 0 : Worker.query_params.offset,
             size: (Worker.query_params.size === undefined) ? 20 : Worker.query_params.size,
             aggregate: false
         }
 
         let search_results: any;
-        search_results = await this.getSearchResultsFromTorre(query_params);
+        search_results = await this.getSearchResultsFromTorre(torre_query_params);
 
         for await (const result of search_results.results) {
             const jobsWorker: JobsWorker = new JobsWorker(result.id);

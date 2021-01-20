@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { IMatchQueryParams, IMatchData } from '../types'
+import { SearchWorker, UsersWorker } from '.';
+import { IMatchQueryParams, IMatchData, IUserData, ISearchData, ICollectedData } from '../types'
 
 export default class Worker {
 
@@ -18,14 +19,14 @@ export default class Worker {
      * 
      * @return raw analysed data from server
      */
-    private async postDataToAnalyse() {
-        const data_results: AxiosResponse = await axios({
+    private async postDataToAnalyse(data: ICollectedData) {
+        const result: AxiosResponse = await axios({
             method: 'post',
             url: `http://localhost:5000/match`,
             headers: {'Content-Type': 'application/json'},
-            data: Worker.query_params
+            data: data
         });
-        return data_results.data;
+        return result.data;
     } /* End of postDataToAnalyse */
 
     /**
@@ -36,7 +37,21 @@ export default class Worker {
      */
     public async getMatchData(): Promise<IMatchData> {
         console.log('Match.Worker.getMatchData()');
-        const data = this.postDataToAnalyse();
+
+        // Get user data
+        const userWorker: UsersWorker = new UsersWorker(Worker.query_params.username);
+        const user_data: IUserData | undefined = await userWorker.getUserData();
+
+        // Get job listings data
+        const searchWorker: SearchWorker = new SearchWorker(Worker.query_params.search_params);
+        const job_results: ISearchData[] | undefined = await searchWorker.getJobs();
+
+        const collectedData: ICollectedData = {
+            user_data: user_data,
+            jobs_data: job_results
+        }
+
+        const data = this.postDataToAnalyse(collectedData);
         console.log(data);
         return data;
 

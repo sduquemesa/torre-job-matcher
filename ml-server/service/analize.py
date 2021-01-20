@@ -9,6 +9,7 @@ import nltk
 nltk.download('punkt')
 
 import gensim
+from gensim.summarization import summarize, keywords
 
 import numpy as np
 
@@ -45,10 +46,12 @@ def tokenize_documents(data: dict) -> dict:
 
     tokenizer = RegexpTokenizer(r'\w+')
     docs = []
+    flat_text = ''
 
     # from jobs info
     job_data = data['jobs_data']
     for job in job_data:
+        flat_text += job['job_data']['as_document']
         sentence_tokens = sent_tokenize(job['job_data']['as_document'])
         word_tokens = [[word.lower() for word in tokenizer.tokenize(sentence) if word.lower() not in stop_words]
                         for sentence in sentence_tokens]
@@ -85,9 +88,16 @@ def tokenize_documents(data: dict) -> dict:
 
     # perform a similarity query against the corpus
     query_doc_tf_idf = tf_idf[user_doc_bow]
-    print('Comparing Result:', sims[query_doc_tf_idf])
+    # print('Comparing Result:', sims[query_doc_tf_idf])
     print(np.mean(sims[query_doc_tf_idf]))
     print(np.max(sims[query_doc_tf_idf]))
+
+
+    # Summarize
+
+    # collapse = lambda lst: ' ' .join(itertools.chain.from_iterable(lst))
+    # plain_jobs_text = collapse(docs)
+    print(summarize(flat_text, word_count = 50), keywords(flat_text, ratio = 0.01))
 
     return data
 

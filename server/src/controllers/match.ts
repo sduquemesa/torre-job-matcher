@@ -51,8 +51,7 @@ export default class Worker {
             jobs_data: job_results
         }
 
-        const data = this.postDataToAnalyse(collectedData);
-        console.log(data);
+        const data = await this.postDataToAnalyse(collectedData);
         return data;
 
     } /* End of getMatchData */

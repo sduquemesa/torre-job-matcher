@@ -59,7 +59,8 @@ app.get('/api/jobs/search',
         text_query: inRequest.query.text,
         size: inRequest.query.size,
         offset: inRequest.query.offset,
-        aggregate: inRequest.query.aggregate
+        aggregate: inRequest.query.aggregate,
+        lang: inRequest.query.lang
       }
 
 
@@ -105,7 +106,8 @@ app.get('/api/match',
           text_query: inRequest.query.text,
           size: inRequest.query.size,
           offset: inRequest.query.offset,
-          aggregate: inRequest.query.aggregate
+          aggregate: inRequest.query.aggregate,
+          lang: inRequest.query.lang
         }
       }
       const matchWorker: MatchWorker = new MatchWorker(query_params);

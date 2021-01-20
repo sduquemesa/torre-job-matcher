@@ -9,12 +9,14 @@ export interface ISearchQueryParams {
     offset: any,
     size: any,
     aggregate: any,
-    text_query: any
+    text_query: any,
+    lang: any
 }
 
 export interface ITorreSearchQueryParams {
     offset: number,
     size: number,
-    aggregate: boolean
+    aggregate: boolean,
+    lang: any
 }
 

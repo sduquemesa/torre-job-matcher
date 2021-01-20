@@ -24,7 +24,7 @@ export default class Worker {
 
         const search_results: AxiosResponse = await axios({
             method: 'post',
-            url: `https://search.torre.co/opportunities/_search/?offset=${query_params.offset}&size=${query_params.size}`,
+            url: `https://search.torre.co/opportunities/_search/?offset=${query_params.offset}&size=${query_params.size}&lang=${query_params.lang}`,
             headers: {},
             data: {
                 "skill/role": {
@@ -51,7 +51,8 @@ export default class Worker {
         const torre_query_params: ITorreSearchQueryParams = {
             offset: (Worker.query_params.offset === undefined) ? 0 : Worker.query_params.offset,
             size: (Worker.query_params.size === undefined) ? 20 : Worker.query_params.size,
-            aggregate: false
+            aggregate: false,
+            lang: (Worker.query_params.lang === undefined) ? 'en' : Worker.query_params.lang
         }
 
         let search_results: any;

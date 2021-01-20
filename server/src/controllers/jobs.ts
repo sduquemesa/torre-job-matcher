@@ -43,7 +43,7 @@ export default class Worker {
         if (torre_job_data.details !== undefined) {
             job_data = {
                 objective: torre_job_data.objective,
-                details: torre_job_data.details.map( (detail_value: any) : string[] => {return detail_value.content} ),
+                details: torre_job_data.details.filter( (detail_value: any) =>  detail_value.code === 'responsibilities' || detail_value.code === 'requirements' || detail_value.code === 'career-path').map( (detail_value: any) : string[] => {return detail_value.content} ),
                 strengths: torre_job_data.strengths.map( (strength_value: any) : string[] => {return strength_value.name} ),
                 job_id: Worker.job_id
             };

@@ -5,11 +5,19 @@ from nltk.tokenize import sent_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
 stop_words = set(stopwords.words('english'))  
 
+from nltk.stem import PorterStemmer 
+ps = PorterStemmer() 
+
 import nltk
 nltk.download('punkt')
 
 import gensim
-from gensim.summarization import summarize, keywords
+from gensim.summarization import keywords
+from gensim.summarization.summarizer import summarize 
+from gensim import models
+from gensim import similarities
+
+
 
 import numpy as np
 
@@ -49,15 +57,14 @@ def tokenize_documents(data: dict) -> dict:
     flat_text = ''
 
     # from jobs info
-    job_data = data['jobs_data']
-    for job in job_data:
+    jobs_data = data['jobs_data']
+    for job in jobs_data:
         flat_text += job['job_data']['as_document']
         sentence_tokens = sent_tokenize(job['job_data']['as_document'])
         word_tokens = [[word.lower() for word in tokenizer.tokenize(sentence) if word.lower() not in stop_words]
                         for sentence in sentence_tokens]
         job['job_data']['tokens'] = word_tokens
-        docs.extend([sentence for sentence in word_tokens])
-
+        docs.append(list(itertools.chain(*word_tokens)))
 
     # from user info
     user_data = data['user_data']
@@ -72,32 +79,30 @@ def tokenize_documents(data: dict) -> dict:
     # create corpus
     corpus = [dictionary.doc2bow(doc) for doc in docs]
 
-    # TF-IDF
-    tf_idf = gensim.models.TfidfModel(corpus)
-    # for doc in tf_idf[corpus]:
-    #     print([[dictionary[id], np.around(freq, decimals=2)] for id, freq in doc])
-
-
-    # similarity measure
-    sims = gensim.similarities.Similarity('./service/index_data',tf_idf[corpus],
-                                        num_features=len(dictionary))
-
     # create query document from user info, update an existing dictionary and create bag of words
-    print(user_data['tokens'])
     user_doc_bow = dictionary.doc2bow(list(itertools.chain(*user_data['tokens'])))
 
-    # perform a similarity query against the corpus
-    query_doc_tf_idf = tf_idf[user_doc_bow]
-    # print('Comparing Result:', sims[query_doc_tf_idf])
-    print(np.mean(sims[query_doc_tf_idf]))
-    print(np.max(sims[query_doc_tf_idf]))
+    # Similarity query using LSI
+    lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=10)
+    vec_lsi = lsi[user_doc_bow]  # convert the query to LSI space
+
+    index = similarities.MatrixSimilarity(lsi[corpus])  # transform corpus to LSI space and index it
+
+    sims = index[vec_lsi]  # perform a similarity query against the corpus
+    # print(list(enumerate(sims)))  # print (document_number, document_similarity) 2-tuples
+
+    sims = sorted(enumerate(sims), key=lambda item: -item[1])
+    for doc_position, doc_score in sims:
+        print(doc_score, jobs_data[doc_position]['id'])
 
 
     # Summarize
+    summary = summarize(flat_text, word_count = 100).replace('•', ' ')
+    # print(summary)
 
-    # collapse = lambda lst: ' ' .join(itertools.chain.from_iterable(lst))
-    # plain_jobs_text = collapse(docs)
-    print(summarize(flat_text, word_count = 50), keywords(flat_text, ratio = 0.01))
+    # get keywords
+    keywords_list = [key for key, grp in itertools.groupby([ps.stem(keyword) for keyword in keywords(flat_text).split('\n')])]
+    # print(keywords_list)
 
     return data
 

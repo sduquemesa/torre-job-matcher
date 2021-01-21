@@ -8,6 +8,7 @@ export default function InputForm(props) {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const [text, setText] = React.useState('');
+    const [selectedOption, setSelectedOption] = React.useState('');
     const loading = open && options.length === 0;
 
     React.useEffect(() => {
@@ -33,7 +34,7 @@ export default function InputForm(props) {
                     data: {"name":{"term":text}}
                 });
                 // console.log(response.data.results);
-                suggestions = response.data.results.map(val => {return {name: val.name}});
+                suggestions = response.data.results.map(val => {return {name: val.name, username: val.username}});
             }
 
             if (active) {
@@ -55,8 +56,19 @@ export default function InputForm(props) {
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            props.parentCallback(event.target.value);
+
+            (props.search_type === 'opportunity') ? props.parentCallback(event.target.value) : props.parentCallback(selectedOption);
+            // console.log(selectedOption);
         }
+    }
+
+    const getSelectedOption = (option, value) => {
+       if (option.name === value.name) {
+            setSelectedOption(option.username)
+            return true;
+       } else {
+            return false;
+       }
     }
 
     return (
@@ -71,7 +83,7 @@ export default function InputForm(props) {
             onClose={() => {
                 setOpen(false);
             }}
-            getOptionSelected={(option, value) => option.name === value.name}
+            getOptionSelected={getSelectedOption}
             getOptionLabel={(option) => option.name}
             options={options}
             loading={loading}

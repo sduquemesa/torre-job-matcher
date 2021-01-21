@@ -22,9 +22,12 @@ export default class Worker {
     private async postDataToAnalyse(data: ICollectedData) {
         const result: AxiosResponse = await axios({
             method: 'post',
-            url: `http://localhost:5000/match`,
+            url: `http://35.247.231.206:5000/match`,
             headers: {'Content-Type': 'application/json'},
-            data: data
+            data: data,
+            validateStatus: function (status) {
+                return true; // default
+              },
         });
         return result.data;
     } /* End of postDataToAnalyse */

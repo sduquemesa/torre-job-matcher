@@ -71,7 +71,6 @@ export default function InputForm(props) {
             onClose={() => {
                 setOpen(false);
             }}
-            onChange={(event)=>setText(event.target.value)}
             getOptionSelected={(option, value) => option.name === value.name}
             getOptionLabel={(option) => option.name}
             options={options}
@@ -92,6 +91,7 @@ export default function InputForm(props) {
                     }}
                     // onChange={(event)=>setText(event.target.value)}
                     onKeyDown={(event)=>handleKeyDown(event)}
+                    onChange={(event)=>setText(event.target.value)}
                 />
             )}
         />

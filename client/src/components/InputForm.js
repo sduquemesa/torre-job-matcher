@@ -75,7 +75,7 @@ export default function InputForm(props) {
         <Autocomplete
             id={`${props.search_type}-textfield`}
             autoComplete={true}
-            style={{width: '50vw'}}
+            style={{width: '800px', paddingBottom: '1rem'}}
             open={open}
             onOpen={() => {
                 setOpen(true);

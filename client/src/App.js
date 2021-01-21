@@ -1,23 +1,22 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import InputForm from './components/InputForm.js';
 
 function App() {
+  const [oportunity, setOportunity] = React.useState('');
+  const callback_opportunity = (data) => { setOportunity(data) };
+
+  const [username, setUsername] = React.useState('');
+  const callback_username = (data) => { setUsername(data) };
+
+  React.useEffect(() => {
+    console.log(oportunity,username);
+  }, [oportunity, username])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <InputForm label='Torre Opportunity' search_type={'opportunity'} parentCallback = {callback_opportunity}/>
+      <InputForm label='Torre User' search_type={'people'} parentCallback = {callback_username}/>
     </div>
   );
 }

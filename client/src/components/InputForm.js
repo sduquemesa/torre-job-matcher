@@ -9,6 +9,9 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 
+import Fab from "@material-ui/core/Fab";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+
 InputForm.propTypes = {
   search_type: PropTypes.string,
   label: PropTypes.string,
@@ -19,8 +22,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     "& > *": {
-      margin: theme.spacing(1),
+      margin: theme.spacing(2),
     },
+  },
+  fab: {
+    background: "transparent",
+    float: "right",
+    marginTop: "10px",
   },
 }));
 
@@ -70,74 +78,86 @@ export default function InputForm(props) {
   }, [open]);
 
   return (
-    <Autocomplete
-      id={`input-${props.search_type}`}
-      autoComplete={true}
-      autoHighlight={true}
-      autoSelect={true}
-      // style={}
-      open={open}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
-      getOptionSelected={(option, value) => {
-        if (value.name !== undefined) {
-          return option.name === value.name;
-        } else {
-          return false;
-        }
-      }}
-      getOptionLabel={(option) => (option?.name ? option.name : "")}
-      options={options}
-      loading={loading}
-      value={value}
-      onChange={(event, newValue) => {
-        setValue(newValue);
-        props.parentCallback(newValue);
-      }}
-      inputValue={inputValue}
-      onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue);
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={props.label}
-          variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <React.Fragment>
-                {loading ? (
-                  <CircularProgress color="inherit" size={20} />
-                ) : null}
-                {params.InputProps.endAdornment}
-              </React.Fragment>
-            ),
-          }}
-        />
-      )}
-      renderOption={(option) => (
-        <Grid container alignItems="center" className={classes.root}>
-          {option?.username ? (
-            <Grid item>
-              <Avatar alt={option.name} src={`${option.picture}`} />
-            </Grid>
-          ) : null}
-          <Grid item xs>
-            <span key={`text-${option.name}`} style={{ fontWeight: 400 }}>
-              {option.name}
-            </span>
+    <>
+      <Autocomplete
+        id={`input-${props.search_type}`}
+        autoComplete={true}
+        autoHighlight={true}
+        autoSelect={true}
+        // style={}
+        open={open}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        getOptionSelected={(option, value) => {
+          if (value.name !== undefined) {
+            return option.name === value.name;
+          } else {
+            return false;
+          }
+        }}
+        getOptionLabel={(option) => (option?.name ? option.name : "")}
+        options={options}
+        loading={loading}
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={props.label}
+            variant="outlined"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <React.Fragment>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </React.Fragment>
+              ),
+            }}
+          />
+        )}
+        renderOption={(option) => (
+          <Grid container alignItems="center" className={classes.root}>
+            {option?.username ? (
+              <Grid item>
+                <Avatar alt={option.name} src={`${option.picture}`} />
+              </Grid>
+            ) : null}
+            <Grid item xs>
+              <span key={`text-${option.name}`} style={{ fontWeight: 400 }}>
+                {option.name}
+              </span>
 
-            <Typography variant="body2" color="textSecondary">
-              {option?.username ? <span>{option.username}</span> : null}
-            </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {option?.username ? <span>{option.username}</span> : null}
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-      )}
-    />
+        )}
+      />
+      <Fab
+        aria-label="add"
+        className={classes.fab}
+        aria-label="submit"
+        disableRipple={true}
+        onClick={() => {
+          props.parentCallback(value);
+        }}
+      >
+        <NavigateNextIcon style={{ color: "#322214" }} />
+      </Fab>
+    </>
   );
 }

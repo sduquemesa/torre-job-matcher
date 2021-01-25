@@ -1,14 +1,15 @@
-import axios from "axios";
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import axios from 'axios';
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function InputForm(props) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const [text, setText] = React.useState("");
-  const [selectedOption, setSelectedOption] = React.useState("");
+  const [value, setValue] = React.useState("");
+  const [inputValue, setInputValue] = React.useState("");
+
   const loading = open && options.length === 0;
 
   React.useEffect(() => {
@@ -50,7 +51,7 @@ export default function InputForm(props) {
     return () => {
       active = false;
     };
-  }, [text, props.search_type, loading]);
+  }, [props.search_type, loading]);
 
   React.useEffect(() => {
     if (!open) {
@@ -58,45 +59,29 @@ export default function InputForm(props) {
     }
   }, [open]);
 
-  // const handleKeyDown = (event) => {
-
-  //         (props.search_type === 'opportunity') ? props.parentCallback(event.target.value) : props.parentCallback(selectedOption);
-  //         console.log(selectedOption);
-
-  // }
-
-  const getSelectedOption = (option, value) => {
-    if (option.name === value.name) {
-      // setSelectedOption(option.username)
-      props.search_type === "opportunity"
-        ? props.parentCallback(option.name)
-        : props.parentCallback(option.username);
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   return (
     <Autocomplete
-      id={`${props.search_type}-textfield`}
-      autoComplete={true}
-      autoSelect={true}
-      style={{ width: "800px", paddingBottom: "1rem" }}
+      id="asynchronous-demo"
+      style={{ width: 300 }}
       open={open}
       onOpen={() => {
         setOpen(true);
       }}
-      onClose={(event) => {
+      onClose={() => {
         setOpen(false);
-        // setText(event.target.value)
       }}
-      getOptionSelected={getSelectedOption}
+      getOptionSelected={(option, value) => option.name === value.name}
       getOptionLabel={(option) => option.name}
       options={options}
       loading={loading}
-      // onChange={(event)=>{
-      //     console.log(event.target);setText(event.target)}}
+      value={value}
+      onChange={(event, newValue) => {
+        setValue(newValue);
+      }}
+      inputValue={inputValue}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -113,7 +98,6 @@ export default function InputForm(props) {
               </React.Fragment>
             ),
           }}
-          // onKeyDown={(event)=>handleKeyDown(event)}
         />
       )}
     />

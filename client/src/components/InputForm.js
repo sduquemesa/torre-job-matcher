@@ -54,17 +54,17 @@ export default function InputForm(props) {
         }
     }, [open]);
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
+    // const handleKeyDown = (event) => {
 
-            (props.search_type === 'opportunity') ? props.parentCallback(event.target.value) : props.parentCallback(selectedOption);
-            // console.log(selectedOption);
-        }
-    }
+    //         (props.search_type === 'opportunity') ? props.parentCallback(event.target.value) : props.parentCallback(selectedOption);
+    //         console.log(selectedOption);
+
+    // }
 
     const getSelectedOption = (option, value) => {
        if (option.name === value.name) {
-            setSelectedOption(option.username)
+            // setSelectedOption(option.username)
+            (props.search_type === 'opportunity') ? props.parentCallback(option.name) : props.parentCallback(option.username);
             return true;
        } else {
             return false;
@@ -75,18 +75,22 @@ export default function InputForm(props) {
         <Autocomplete
             id={`${props.search_type}-textfield`}
             autoComplete={true}
+            autoSelect={true}
             style={{width: '800px', paddingBottom: '1rem'}}
             open={open}
             onOpen={() => {
                 setOpen(true);
             }}
-            onClose={() => {
+            onClose={(event) => {
                 setOpen(false);
+                // setText(event.target.value)
             }}
             getOptionSelected={getSelectedOption}
             getOptionLabel={(option) => option.name}
             options={options}
             loading={loading}
+            // onChange={(event)=>{
+            //     console.log(event.target);setText(event.target)}}
             renderInput={(params) => (
                 <TextField
                     {...params}
@@ -101,9 +105,8 @@ export default function InputForm(props) {
                             </React.Fragment>
                         ),
                     }}
-                    // onChange={(event)=>setText(event.target.value)}
-                    onKeyDown={(event)=>handleKeyDown(event)}
-                    onChange={(event)=>setText(event.target.value)}
+                    // onKeyDown={(event)=>handleKeyDown(event)}
+                    
                 />
             )}
         />

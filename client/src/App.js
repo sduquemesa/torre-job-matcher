@@ -3,28 +3,44 @@ import './App.css';
 import InputForm from './components/InputForm.js';
 // import Fade from 'react-reveal/Fade';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
 
 function App() {
   const [oportunity, setOportunity] = React.useState('');
   const callback_opportunity = (data) => { setOportunity(data) };
+  
+  const [buttonPressed, setbuttonPressed] = React.useState(false);
 
   const [username, setUsername] = React.useState('');
   const callback_username = (data) => { setUsername(data) };
 
   const [matchData, setMatchData] = React.useState({});
 
-  React.useEffect(() => {
-    console.log(oportunity, username);
-    (async () => {
-      if (oportunity !== '' && username !== '') {
-        console.log(`localhost:3000/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`);
-        const response = await axios.get(`http://localhost:3000/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`);
-        console.log(response.data);
-        setMatchData(response.data);
-      }
-    })()
+  // const { promiseInProgress } = usePromiseTracker();
 
-  }, [oportunity, username])
+  // React.useEffect(() => {
+  //   console.log(oportunity, username);
+  //   (async () => {
+  //     if (oportunity !== '' && username !== '') {
+  //       console.log(`http://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`);
+  //       const response = await axios.get(`http://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`);
+  //       console.log(response.data);
+  //       setMatchData(response.data);
+  //     }
+  //   })()
+
+  // }, [oportunity, username])
+
+  const handleClick = () => {
+        
+    console.log(`https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`);
+    setbuttonPressed(true);
+    axios.get(`https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`)
+    .then( (response) => {
+      setMatchData(response.data);
+      console.log(response.data);
+    });
+  }
 
   return (
     <div className='app'>
@@ -43,7 +59,11 @@ function App() {
         <InputForm label='Skill/Opportunity' search_type={'opportunity'} parentCallback={callback_opportunity} />
         <InputForm label='Torre User' search_type={'people'} parentCallback={callback_username} />
       </div>
+      {/* <p>{username} {oportunity}</p> */}
+      <Button variant="contained" onClick={handleClick} >Submit</Button>
 
+      {(matchData.global_match_score === undefined && buttonPressed === true) ?
+      <p>Loading...</p> : null}
 
       {matchData.global_match_score === undefined ?
         null

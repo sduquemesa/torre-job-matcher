@@ -1,9 +1,13 @@
-import axios from 'axios';
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import PropTypes from 'prop-types';
+import axios from "axios";
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "@material-ui/core/styles";
 
 InputForm.propTypes = {
   search_type: PropTypes.string,
@@ -11,32 +15,41 @@ InputForm.propTypes = {
   parentCallback: PropTypes.func,
 };
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+}));
+
 export default function InputForm(props) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const [value, setValue] = React.useState('');
-  const [inputValue, setInputValue] = React.useState('');
+  const [value, setValue] = React.useState("");
+  const [inputValue, setInputValue] = React.useState("");
 
   const loading = open && options.length === 0;
+
+  const classes = useStyles();
 
   React.useEffect(() => {
     let active = true;
 
     (async () => {
       let suggestions = [];
-      if (props.search_type === 'opportunity') {
-        console.log(inputValue);
+      if (props.search_type === "opportunity") {
         const response = await axios.get(
-          `https://torre.co/api/strengths?limit=5&q=${inputValue}&context=add-opportunity&locale=en`,
+          `https://torre.co/api/strengths?limit=5&q=${inputValue}&context=add-opportunity&locale=en`
         );
         suggestions = response.data.map((val) => {
           return { name: val.term };
         });
-      } else if (props.search_type === 'people') {
+      } else if (props.search_type === "people") {
         const response = await axios.get(
-          `https://torre-job-matcher.rj.r.appspot.com/api/users/?text=${inputValue}&size=5&offset=0`,
+          `https://torre-job-matcher.rj.r.appspot.com/api/users/?text=${inputValue}&size=5&offset=0`
         );
-        console.log(response.data);
         suggestions = response.data;
       }
 
@@ -71,20 +84,19 @@ export default function InputForm(props) {
         setOpen(false);
       }}
       getOptionSelected={(option, value) => {
-        // console.log(option, value);
         if (value.name !== undefined) {
           return option.name === value.name;
         } else {
           return false;
         }
       }}
-      getOptionLabel={(option) => (option?.name ? option.name : '')}
+      getOptionLabel={(option) => (option?.name ? option.name : "")}
       options={options}
       loading={loading}
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
-        props.parentCallback(newValue?.name);
+        props.parentCallback(newValue);
       }}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {
@@ -107,6 +119,28 @@ export default function InputForm(props) {
             ),
           }}
         />
+      )}
+      renderOption={(option) => (
+        // <React.Fragment>
+        //   {option.name}
+        //   <Typography variant="body2" color="textSecondary">
+        //     {option?.username ? <span>{option.username}</span> : null}
+        //   </Typography>
+        // </React.Fragment>
+        <Grid container alignItems="center" className={classes.root}>
+          <Grid item>
+            <Avatar alt={option.name} src={`${option.picture}`} />
+          </Grid>
+          <Grid item xs>
+            <span key={`text-${option.name}`} style={{ fontWeight: 400 }}>
+              {option.name}
+            </span>
+
+            <Typography variant="body2" color="textSecondary">
+              {option?.username ? <span>{option.username}</span> : null}
+            </Typography>
+          </Grid>
+        </Grid>
       )}
     />
   );

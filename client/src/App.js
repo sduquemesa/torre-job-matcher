@@ -1,18 +1,22 @@
-import React from 'react';
-import './App.css';
-import InputForm from './components/InputForm.js';
+import React from "react";
+import "./App.css";
+import InputForm from "./components/InputForm.js";
 // import Fade from 'react-reveal/Fade';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
+import axios from "axios";
+import Button from "@material-ui/core/Button";
 
 function App() {
-  const [oportunity, setOportunity] = React.useState('');
-  const callback_opportunity = (data) => { setOportunity(data) };
-  
+  const [oportunity, setOportunity] = React.useState("");
+  const callback_opportunity = (data) => {
+    setOportunity(data);
+  };
+
   const [buttonPressed, setbuttonPressed] = React.useState(false);
 
-  const [username, setUsername] = React.useState('');
-  const callback_username = (data) => { setUsername(data) };
+  const [username, setUsername] = React.useState("");
+  const callback_username = (data) => {
+    setUsername(data);
+  };
 
   const [matchData, setMatchData] = React.useState({});
 
@@ -32,19 +36,23 @@ function App() {
   // }, [oportunity, username])
 
   const handleClick = () => {
-        
-    console.log(`https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`);
+    console.log(
+      `https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`
+    );
     setbuttonPressed(true);
-    axios.get(`https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`)
-    .then( (response) => {
-      setMatchData(response.data);
-      console.log(response.data);
-    });
-  }
+    axios
+      .get(
+        `https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${oportunity}&size=10&offset=0&username=${username}`
+      )
+      .then((response) => {
+        setMatchData(response.data);
+        console.log(response.data);
+      });
+  };
 
   return (
-    <div className='app'>
-      <h1>TORRE | Career Pathways</h1>
+    <div className="app">
+      {/* <h1>TORRE | Career Pathways</h1>
       <p>This app compares the user Genome with the available jobs listing from whatever skill/opportunity you choose.</p>
       <p>To do so a Natural Language Processing algorithm is run in order to compare user and job listing data returning the following:  </p>
       <ul>
@@ -53,16 +61,22 @@ function App() {
         <li> keyword: a list of keywords extracted from the job listings texts. Having this keywords in your genome will improve your match chances, </li>
         <li> strenghts stats: a comparative of user strenghts and those most required by the job listings. </li>
       
-      </ul>
-      
-      <div className='form-container'>
-        <InputForm label='Skill/Opportunity' search_type={'opportunity'} parentCallback={callback_opportunity} />
-        <InputForm label='Torre User' search_type={'people'} parentCallback={callback_username} />
+      </ul> */}
+
+      <div className="form-container">
+        <InputForm
+          label="Skill/Opportunity"
+          search_type={"opportunity"}
+          parentCallback={callback_opportunity}
+        />
+        {/* <InputForm label='Torre User' search_type={'people'} parentCallback={callback_username} /> */}
       </div>
       {/* <p>{username} {oportunity}</p> */}
-      <Button variant="contained" onClick={handleClick} >Submit</Button>
+      <Button variant="contained" onClick={handleClick}>
+        Submit
+      </Button>
 
-      {(matchData.global_match_score === undefined && buttonPressed === true) ?
+      {/* {(matchData.global_match_score === undefined && buttonPressed === true) ?
       <p>Loading...</p> : null}
 
       {matchData.global_match_score === undefined ?
@@ -73,10 +87,7 @@ function App() {
           <li>Summary: {matchData.summary}</li>
           <li>Keywords: {matchData.keywords}</li>
         </ul>
-      }
-      
-      
-
+      } */}
     </div>
   );
 }

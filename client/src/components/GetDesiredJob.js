@@ -1,12 +1,12 @@
 import InputForm from "./InputForm.js";
 
-export default function GetUsername(props) {
+export default function GetDesiredJob(props) {
   return (
     <div className="question">
-      <h1>Who are you?</h1>
+      <h1>What do you want to become?</h1>
       <InputForm
-        label="Torre User"
-        search_type={"people"}
+        label="Skill/Opportunity"
+        search_type={"opportunity"}
         parentCallback={props.parentCallback}
       />
     </div>

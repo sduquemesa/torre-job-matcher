@@ -75,7 +75,7 @@ export default function InputForm(props) {
       autoComplete={true}
       autoHighlight={true}
       autoSelect={true}
-      style={{ width: 300 }}
+      // style={}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -121,12 +121,6 @@ export default function InputForm(props) {
         />
       )}
       renderOption={(option) => (
-        // <React.Fragment>
-        //   {option.name}
-        //   <Typography variant="body2" color="textSecondary">
-        //     {option?.username ? <span>{option.username}</span> : null}
-        //   </Typography>
-        // </React.Fragment>
         <Grid container alignItems="center" className={classes.root}>
           {option?.username ? (
             <Grid item>

@@ -15,42 +15,29 @@ export default function InputForm(props) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [value, setValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState('');
 
   const loading = open && options.length === 0;
 
   React.useEffect(() => {
     let active = true;
 
-    if (!loading) {
-      return undefined;
-    }
-
     (async () => {
       let suggestions = [];
-      const query = value?.name ? value.name : '';
       if (props.search_type === 'opportunity') {
+        console.log(inputValue);
         const response = await axios.get(
-          `https://torre.co/api/strengths?limit=5&q=${query}&context=add-opportunity&locale=en`,
+          `https://torre.co/api/strengths?limit=5&q=${inputValue}&context=add-opportunity&locale=en`,
         );
         suggestions = response.data.map((val) => {
           return { name: val.term };
         });
       } else if (props.search_type === 'people') {
-        const response = await axios({
-          method: 'POST',
-          url: `https://search.torre.co/people/_search/?size=5&lang=en&aggregate=false&offset=0`,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Access-Control-Allow-Origin': '*',
-          },
-          data: { name: { term: query } },
-        });
-        suggestions = response.data.results.map((val) => {
-          return {
-            name: val.name,
-            username: val.username,
-          };
-        });
+        const response = await axios.get(
+          `https://torre-job-matcher.rj.r.appspot.com/api/users/?text=${inputValue}&size=5&offset=0`,
+        );
+        console.log(response.data);
+        suggestions = response.data;
       }
 
       if (active) {
@@ -61,7 +48,7 @@ export default function InputForm(props) {
     return () => {
       active = false;
     };
-  }, [props.search_type, loading, value]);
+  }, [props.search_type, loading, value, inputValue]);
 
   React.useEffect(() => {
     if (!open) {
@@ -71,7 +58,7 @@ export default function InputForm(props) {
 
   return (
     <Autocomplete
-      id="asynchronous-demo"
+      id={`input-${props.search_type}`}
       autoComplete={true}
       autoHighlight={true}
       autoSelect={true}
@@ -83,14 +70,25 @@ export default function InputForm(props) {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option, value) => option.name === value.name}
-      getOptionLabel={(option) => (option.name ? option.name : '')}
+      getOptionSelected={(option, value) => {
+        // console.log(option, value);
+        if (value.name !== undefined) {
+          return option.name === value.name;
+        } else {
+          return false;
+        }
+      }}
+      getOptionLabel={(option) => (option?.name ? option.name : '')}
       options={options}
       loading={loading}
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
-        props.parentCallback(newValue.name);
+        props.parentCallback(newValue?.name);
+      }}
+      inputValue={inputValue}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
       }}
       renderInput={(params) => (
         <TextField

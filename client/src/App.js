@@ -15,6 +15,7 @@ function App() {
   const [username, setUsername] = React.useState('');
   const callback_username = (data) => {
     setUsername(data);
+    console.log("callback_username", data);
   };
 
   const [matchData, setMatchData] = React.useState({});

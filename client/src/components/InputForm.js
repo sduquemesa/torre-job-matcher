@@ -3,12 +3,18 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
+
+InputForm.propTypes = {
+  search_type: PropTypes.string,
+  label: PropTypes.string,
+  parentCallback: PropTypes.func,
+};
 
 export default function InputForm(props) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const [value, setValue] = React.useState("");
-  const [inputValue, setInputValue] = React.useState("");
+  const [value, setValue] = React.useState('');
 
   const loading = open && options.length === 0;
 
@@ -21,25 +27,29 @@ export default function InputForm(props) {
 
     (async () => {
       let suggestions = [];
-      if (props.search_type === "opportunity") {
+      const query = value?.name ? value.name : '';
+      if (props.search_type === 'opportunity') {
         const response = await axios.get(
-          `https://torre.co/api/strengths?limit=5&q=${text}&context=add-opportunity&locale=en`
+          `https://torre.co/api/strengths?limit=5&q=${query}&context=add-opportunity&locale=en`,
         );
-        // console.log(response.data);
         suggestions = response.data.map((val) => {
           return { name: val.term };
         });
-        // console.log(suggestions);
-      } else if (props.search_type === "people") {
+      } else if (props.search_type === 'people') {
         const response = await axios({
-          method: "post",
+          method: 'POST',
           url: `https://search.torre.co/people/_search/?size=5&lang=en&aggregate=false&offset=0`,
-          headers: {},
-          data: { name: { term: text } },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin': '*',
+          },
+          data: { name: { term: query } },
         });
-        // console.log(response.data.results);
         suggestions = response.data.results.map((val) => {
-          return { name: val.name, username: val.username };
+          return {
+            name: val.name,
+            username: val.username,
+          };
         });
       }
 
@@ -51,7 +61,7 @@ export default function InputForm(props) {
     return () => {
       active = false;
     };
-  }, [props.search_type, loading]);
+  }, [props.search_type, loading, value]);
 
   React.useEffect(() => {
     if (!open) {
@@ -62,6 +72,9 @@ export default function InputForm(props) {
   return (
     <Autocomplete
       id="asynchronous-demo"
+      autoComplete={true}
+      autoHighlight={true}
+      autoSelect={true}
       style={{ width: 300 }}
       open={open}
       onOpen={() => {
@@ -71,16 +84,13 @@ export default function InputForm(props) {
         setOpen(false);
       }}
       getOptionSelected={(option, value) => option.name === value.name}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => (option.name ? option.name : '')}
       options={options}
       loading={loading}
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
-      }}
-      inputValue={inputValue}
-      onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue);
+        props.parentCallback(newValue.name);
       }}
       renderInput={(params) => (
         <TextField

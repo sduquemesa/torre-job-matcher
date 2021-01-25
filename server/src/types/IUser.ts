@@ -2,7 +2,9 @@ export default interface IUserData {
     name: string,
     picture: URL,
     professionalHeadline: string,
-    summaryOfBio: string,
+    summaryOfBio?: string,
     username?: string
-    strengths: any,
+    strengths?: any,
+    id?: string,
+    location?: string,
 }

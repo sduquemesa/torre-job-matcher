@@ -128,9 +128,11 @@ export default function InputForm(props) {
         //   </Typography>
         // </React.Fragment>
         <Grid container alignItems="center" className={classes.root}>
-          <Grid item>
-            <Avatar alt={option.name} src={`${option.picture}`} />
-          </Grid>
+          {option?.username ? (
+            <Grid item>
+              <Avatar alt={option.name} src={`${option.picture}`} />
+            </Grid>
+          ) : null}
           <Grid item xs>
             <span key={`text-${option.name}`} style={{ fontWeight: 400 }}>
               {option.name}

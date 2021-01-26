@@ -10,6 +10,8 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import Collapse from "@material-ui/core/Collapse";
 import Grid from "@material-ui/core/Grid";
+import Chip from "@material-ui/core/Chip";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +22,41 @@ const useStyles = makeStyles((theme) => ({
     // justifyContent: "space-evenly",
     // alignItems: "center",
   },
+  chiplist: {
+    display: "flex",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    listStyle: "none",
+    padding: theme.spacing(0.5),
+    margin: 0,
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
 }));
+
+function ChipList(props) {
+  const classes = useStyles();
+  const chipData = props.strengths;
+
+  return (
+    <Paper component="ul" className={classes.chiplist} elevation={0}>
+      {chipData.map((data) => {
+        return (
+          <li key={data}>
+            <Chip
+              label={data}
+              size="small"
+              variant="outlined"
+              className={classes.chip}
+              color="primary"
+            />
+          </li>
+        );
+      })}
+    </Paper>
+  );
+}
 
 function JobCard(props) {
   const [jobData, setJobData] = React.useState({});
@@ -58,6 +94,7 @@ function JobCard(props) {
           <Typography variant="body2" color="textSecondary">
             Match: {Math.round(props.jobScore * 100)}%
           </Typography>
+          <ChipList strengths={jobData.strengths} />
         </CardContent>
       </CardActionArea>
       <CardActions>

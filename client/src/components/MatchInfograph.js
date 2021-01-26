@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-evenly",
     width: "90%",
-    height: "80%",
+    height: "100%",
     backgroundColor: "transparent",
     "& > *": {
       margin: theme.spacing(1),
@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
+  title: {
+    textAlign: "right",
+    marginTop: "20px",
+  },
 }));
 
 export default function MatchInfograph(props) {
@@ -37,15 +41,15 @@ export default function MatchInfograph(props) {
 
   return (
     <Paper className={classes.root} elevation={0}>
-      <div>
-        <Typography
-          variant="h4"
+      <div className={classes.title}>
+        {/* <Typography
+          variant="h5"
           color="textSecondary"
           component="p"
           style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
         >
           your career pathway
-        </Typography>
+        </Typography> */}
         <Typography
           variant="h2"
           color="textPrimary"
@@ -58,13 +62,9 @@ export default function MatchInfograph(props) {
       <div className={classes.infogrid}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={6}>
-            <div>
-              <MatchCircleCard
-                matchScore={props.matchData.global_match_score}
-              />
-            </div>
+            <MatchCircleCard matchScore={props.matchData.global_match_score} />
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} md={6}>
             <StrengthsCard
               strengthStats={props.matchData.strenght_stats}
               userStrengths={props.userData.strengths}
@@ -72,7 +72,7 @@ export default function MatchInfograph(props) {
               className={classes.paper}
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12}>
             <SummaryCard phrases={props.matchData.summary} />
           </Grid>
           {/* <Divider /> */}

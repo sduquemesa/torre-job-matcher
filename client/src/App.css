@@ -1,32 +1,43 @@
 .App {
   display: flex;
-  width: 100vw;
-  height: 100vh;
+  flex-direction: row;
+  /* width: 100vw;
+  height: 100vh; */
 }
 
 .user-container {
   display: flex;
   width: 40%;
-  height: 100vh;
+  min-height: 100vh;
   align-items: center;
   flex-direction: column;
   justify-content: center;
 }
 .job-container {
   display: flex;
+  flex-direction: column;
   width: 60%;
-  height: 100vh;
+  min-height: 100vh;
   align-items: center;
   justify-content: center;
   background-color: #00acc1;
-  flex-direction: column;
 }
 
 .question {
   width: 80%;
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  color: #322214;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .App {
+    flex-direction: column;
+  }
+
+  .user-container {
+    width: 100%;
+  }
+
+  .job-container {
+    width: 100%;
+  }
 }

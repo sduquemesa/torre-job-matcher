@@ -10,30 +10,14 @@ const PI = Math.PI;
 
 const useStyles = makeStyles({
   root: {
-    width: "100%",
-    height: "100%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    height: "100%",
   },
   textValue: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  },
-  container: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
+    alignSelf: "center",
     margin: "auto",
-  },
-  plot: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
-    margin: "auto",
-    // backgroundColor: "green",
   },
 });
 
@@ -41,7 +25,7 @@ function ArcPlot(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
+    <div>
       <Typography
         variant="h1"
         color="textSecondary"
@@ -103,22 +87,22 @@ function ArcPlot(props) {
 export default function MatchCircleCard(props) {
   const classes = useStyles();
 
-  const [parentSize, setParentSize] = React.useState({});
-  const parentRef = React.useRef(null);
+  // const [parentSize, setParentSize] = React.useState({});
+  // const parentRef = React.useRef(null);
 
-  React.useEffect(() => {
-    if (parentRef.current) {
-      let parentHeight = parentRef.current.offsetHeight;
-      let parentWidth = parentRef.current.offsetWidth;
-      setParentSize({
-        width: parentWidth,
-        height: parentHeight,
-      });
-    }
-  }, [parentRef]);
+  // React.useEffect(() => {
+  //   if (parentRef.current) {
+  //     let parentHeight = parentRef.current.offsetHeight;
+  //     let parentWidth = parentRef.current.offsetWidth;
+  //     setParentSize({
+  //       width: parentWidth,
+  //       height: parentHeight,
+  //     });
+  //   }
+  // }, [parentRef]);
 
   return (
-    <Card className={classes.root} ref={parentRef}>
+    <Card className={classes.root}>
       <CardContent>
         <Typography variant="h6" color="textPrimary">
           Match Score
@@ -126,19 +110,19 @@ export default function MatchCircleCard(props) {
         <Typography color="textSecondary" gutterBottom>
           How well you match the job listings.
         </Typography>
-        <Typography
-          variant="h1"
-          color="textSecondary"
-          // className={classes.textValue}
-        >
-          <CountUp
-            start={Math.round(props.matchScore * 100) - 20}
-            end={Math.round(props.matchScore * 100)}
-            suffix="%"
-            useEasing
-          />
-        </Typography>
       </CardContent>
+      <Typography
+        variant="h1"
+        color="textSecondary"
+        className={classes.textValue}
+      >
+        <CountUp
+          start={Math.round(props.matchScore * 100) - 20}
+          end={Math.round(props.matchScore * 100)}
+          suffix="%"
+          useEasing
+        />
+      </Typography>
       {/* {parentSize ? (
         // <ArcPlot valueToRender={props.matchScore} size={parentSize} />
       ) : null} */}

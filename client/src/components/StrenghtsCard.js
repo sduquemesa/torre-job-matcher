@@ -10,12 +10,10 @@ import { XYPlot, MarkSeries, LabelSeries } from "react-vis";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    height: "100%",
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "space-evenly",
-    // alignItems: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
   textValue: {
     position: "absolute",

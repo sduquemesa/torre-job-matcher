@@ -8,19 +8,16 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
-import Collapse from "@material-ui/core/Collapse";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    height: "100%",
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "space-evenly",
-    // alignItems: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
   chiplist: {
     display: "flex",
@@ -60,7 +57,7 @@ function ChipList(props) {
 
 function JobCard(props) {
   const [jobData, setJobData] = React.useState({});
-  const [expanded, setExpanded] = React.useState(false);
+  const classes = useStyles();
 
   React.useEffect(() => {
     (async () => {
@@ -72,11 +69,6 @@ function JobCard(props) {
     })();
   }, []);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
-  const classes = useStyles();
   return (
     <Card className={classes.root}>
       <CardActionArea>

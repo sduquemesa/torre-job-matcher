@@ -43,7 +43,7 @@ export default function App() {
     if (username !== "" && opportunity !== "")
       (async () => {
         const { data } = await axios.get(
-          `https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${opportunity}&size=20&offset=0&username=${username}`
+          `https://torre-job-matcher.rj.r.appspot.com/api/match/?text=${opportunity}&size=5&offset=0&username=${username}`
         );
         setMatchData(data);
       })();

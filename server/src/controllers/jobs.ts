@@ -45,7 +45,9 @@ export default class Worker {
                 objective: torre_job_data.objective,
                 details: torre_job_data.details.filter( (detail_value: any) =>  detail_value.code === 'responsibilities' || detail_value.code === 'requirements' || detail_value.code === 'career-path').map( (detail_value: any) : string[] => {return detail_value.content} ),
                 strengths: torre_job_data.strengths.map( (strength_value: any) : string[] => {return strength_value.name} ),
-                job_id: Worker.job_id
+                job_id: Worker.job_id,
+                organizations: torre_job_data.organizations.map((organization: any) => { return { name: organization.name, picture: organization.picture } }),
+                cover_img: torre_job_data.attachments.filter((attachment: any) => (attachment.resource === 'cover'))[0].address
             };
         } else {
             job_data = undefined;

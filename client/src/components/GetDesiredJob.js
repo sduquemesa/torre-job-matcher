@@ -10,7 +10,7 @@ export default function GetDesiredJob(props) {
         component="p"
         style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
       >
-        What do you want to become?
+        What do you want to do?
       </Typography>
       <InputForm
         label="Skill/Opportunity"

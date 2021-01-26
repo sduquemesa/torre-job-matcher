@@ -1,3 +1,4 @@
+import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -22,13 +23,13 @@ const useStyles = makeStyles({
   },
   container: {
     position: "relative",
-    width: "300px",
-    height: "300px",
+    width: "100%",
+    height: "100%",
     margin: "auto",
   },
   plot: {
-    width: "300px",
-    height: "300px",
+    width: "100%",
+    height: "100%",
     margin: "auto",
     // backgroundColor: "green",
   },
@@ -55,10 +56,10 @@ function ArcPlot(props) {
         <XYPlot
           xDomain={[-3, 3]}
           yDomain={[-3, 3]}
-          width={300}
           getAngle={(d) => d.value}
           getAngle0={(d) => 0}
-          height={300}
+          width={props.size.width}
+          height={props.size.width}
           margin={0}
         >
           <ArcSeries
@@ -100,8 +101,22 @@ function ArcPlot(props) {
 export default function MatchCircleCard(props) {
   const classes = useStyles();
 
+  const [parentSize, setParentSize] = React.useState({});
+  const parentRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (parentRef.current) {
+      let parentHeight = parentRef.current.offsetHeight;
+      let parentWidth = parentRef.current.offsetWidth;
+      setParentSize({
+        width: parentWidth,
+        height: parentHeight,
+      });
+    }
+  }, [parentRef]);
+
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} ref={parentRef}>
       <CardContent>
         <Typography variant="h6" color="textPrimary">
           Match Score
@@ -110,7 +125,9 @@ export default function MatchCircleCard(props) {
           How well you match the job listings.
         </Typography>
       </CardContent>
-      <ArcPlot valueToRender={props.matchScore} />
+      {parentSize ? (
+        <ArcPlot valueToRender={props.matchScore} size={parentSize} />
+      ) : null}
     </Card>
   );
 }

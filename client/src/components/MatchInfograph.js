@@ -54,7 +54,7 @@ export default function MatchInfograph(props) {
         </Typography>
       </div>
       <div className={classes.infogrid}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="stretch">
           <Grid item xs={5}>
             <div>
               <MatchCircleCard

@@ -11,7 +11,8 @@ const useStyles = makeStyles({
     width: "100%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-evenly",
+    // justifyContent: "space-evenly",
+    // alignItems: "center",
   },
   textValue: {
     position: "absolute",
@@ -131,9 +132,7 @@ export default function MatchCircleCard(props) {
   const classes = useStyles();
 
   const [parentSize, setParentSize] = React.useState({});
-
   const parentRef = React.useRef(null);
-  const childrenRef = React.useRef(null);
 
   React.useEffect(() => {
     if (parentRef.current) {
@@ -143,14 +142,8 @@ export default function MatchCircleCard(props) {
         width: parentWidth,
         height: parentHeight,
       });
-      console.log(parentHeight, parentWidth);
     }
-
-    if (childrenRef.current) {
-      let childrenHeight = childrenRef.current.offsetHeight;
-      let childrenWidth = childrenRef.current.offsetWidth;
-    }
-  }, [parentRef, childrenRef]);
+  }, [parentRef]);
 
   return (
     <Card className={classes.root} ref={parentRef}>
@@ -168,7 +161,6 @@ export default function MatchCircleCard(props) {
           strengthStats={props.strengthStats}
           userStrengths={props.userStrengths}
           keywords={props.keywords}
-          ref={childrenRef}
           size={parentSize}
         />
       ) : null}

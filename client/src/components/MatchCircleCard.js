@@ -10,14 +10,9 @@ const PI = Math.PI;
 const useStyles = makeStyles({
   root: {
     width: "100%",
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  pos: {
-    marginBottom: 12,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-evenly",
   },
   textValue: {
     position: "absolute",
@@ -52,6 +47,7 @@ function ArcPlot(props) {
         <CountUp
           start={Math.round(props.valueToRender * 100) - 20}
           end={Math.round(props.valueToRender * 100)}
+          sufffix="%"
           useEasing
         />
       </Typography>
@@ -82,8 +78,8 @@ function ArcPlot(props) {
           />
           <ArcSeries
             animation={{
-              damping: 10,
-              stiffness: 50,
+              damping: 8,
+              stiffness: 5,
             }}
             radiusDomain={[0, 2]}
             color={props.valueToRender >= 0 ? "#CDDC39" : "#EF476F"}
@@ -107,10 +103,10 @@ export default function MatchCircleCard(props) {
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography variant="h6" color="textPrimary" gutterBottom>
+        <Typography variant="h6" color="textPrimary">
           Match Score
         </Typography>
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" gutterBottom>
           How well you match the job listings.
         </Typography>
       </CardContent>

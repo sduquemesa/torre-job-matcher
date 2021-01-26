@@ -2,7 +2,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import CountUp from "react-countup";
+import React from "react";
 
 import { XYPlot, MarkSeries, LabelSeries } from "react-vis";
 
@@ -75,7 +75,12 @@ function BubblePlot(props) {
   });
 
   return (
-    <XYPlot yDomain={[0, 22]} xDomain={[0, 5]} width={300} height={300}>
+    <XYPlot
+      yDomain={[0, 22]}
+      xDomain={[0, 5]}
+      width={props.size.width}
+      height={props.size.height}
+    >
       <MarkSeries
         className="bubble-chart"
         strokeWidth={2}
@@ -125,8 +130,30 @@ function BubblePlot(props) {
 export default function MatchCircleCard(props) {
   const classes = useStyles();
 
+  const [parentSize, setParentSize] = React.useState({});
+
+  const parentRef = React.useRef(null);
+  const childrenRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (parentRef.current) {
+      let parentHeight = parentRef.current.offsetHeight;
+      let parentWidth = parentRef.current.offsetWidth;
+      setParentSize({
+        width: parentWidth,
+        height: parentHeight,
+      });
+      console.log(parentHeight, parentWidth);
+    }
+
+    if (childrenRef.current) {
+      let childrenHeight = childrenRef.current.offsetHeight;
+      let childrenWidth = childrenRef.current.offsetWidth;
+    }
+  }, [parentRef, childrenRef]);
+
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} ref={parentRef}>
       <CardContent>
         <Typography variant="h6" color="textPrimary">
           Keywords & Strenghts
@@ -136,11 +163,15 @@ export default function MatchCircleCard(props) {
           required strenghts.
         </Typography>
       </CardContent>
-      <BubblePlot
-        strengthStats={props.strengthStats}
-        userStrengths={props.userStrengths}
-        keywords={props.keywords}
-      />
+      {parentSize ? (
+        <BubblePlot
+          strengthStats={props.strengthStats}
+          userStrengths={props.userStrengths}
+          keywords={props.keywords}
+          ref={childrenRef}
+          size={parentSize}
+        />
+      ) : null}
     </Card>
   );
 }

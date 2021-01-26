@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import Fab from "@material-ui/core/Fab";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -147,17 +148,19 @@ export default function InputForm(props) {
           </Grid>
         )}
       />
-      <Fab
-        aria-label="add"
-        className={classes.fab}
-        aria-label="submit"
-        disableRipple={true}
-        onClick={() => {
-          props.parentCallback(value);
-        }}
-      >
-        <NavigateNextIcon style={{ color: "#322214" }} />
-      </Fab>
+      <Tooltip title={`Sumbmit ${props.search_type}`} aria-label="submit">
+        <Fab
+          aria-label="submit"
+          className={classes.fab}
+          aria-label="submit"
+          disableRipple={true}
+          onClick={() => {
+            props.parentCallback(value);
+          }}
+        >
+          <NavigateNextIcon style={{ color: "#322214" }} />
+        </Fab>
+      </Tooltip>
     </>
   );
 }

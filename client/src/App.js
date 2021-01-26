@@ -59,7 +59,8 @@ export default function App() {
       <div className="job-container">
         {opportunity === "" ? (
           <GetDesiredJob parentCallback={callback_opportunity} />
-        ) : userData?.username ? (
+        ) : userData?.name !== undefined &&
+          matchData?.global_match_score !== undefined ? (
           <MatchInfograph
             userData={userData}
             matchData={matchData}

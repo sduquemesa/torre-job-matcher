@@ -47,7 +47,7 @@ function ArcPlot(props) {
         <CountUp
           start={Math.round(props.valueToRender * 100) - 20}
           end={Math.round(props.valueToRender * 100)}
-          sufffix="%"
+          suffix="%"
           useEasing
         />
       </Typography>

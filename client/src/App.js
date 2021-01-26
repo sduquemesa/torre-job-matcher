@@ -2,6 +2,8 @@ import React from "react";
 import axios from "axios";
 import "./App.css";
 
+import Fade from "@material-ui/core/Fade";
+
 import GetUsername from "./components/GetUsername.js";
 import GetDesiredJob from "./components/GetDesiredJob.js";
 import UserProfile from "./components/UserProfile.js";
@@ -23,8 +25,9 @@ export default function App() {
   };
 
   const [userData, setUserData] = React.useState({});
-  const [jobData, setJobData] = React.useState({});
   const [matchData, setMatchData] = React.useState({});
+
+  const [step, setStep] = React.useState(1);
 
   React.useEffect(() => {
     (async () => {
@@ -32,6 +35,7 @@ export default function App() {
         `https://torre-job-matcher.rj.r.appspot.com/api/user/${username}`
       );
       setUserData(data);
+      setStep(step + 1);
     })();
   }, [username]);
 
@@ -49,7 +53,9 @@ export default function App() {
     <div className="App">
       <div className="user-container">
         {username === "" ? (
-          <GetUsername parentCallback={callback_username} />
+          <Fade in={step === 1}>
+            <GetUsername parentCallback={callback_username} />
+          </Fade>
         ) : userData?.username ? (
           <UserProfile userData={userData} />
         ) : (
@@ -57,18 +63,20 @@ export default function App() {
         )}
       </div>
       <div className="job-container">
-        {opportunity === "" ? (
-          <GetDesiredJob parentCallback={callback_opportunity} />
-        ) : userData?.name !== undefined &&
-          matchData?.global_match_score !== undefined ? (
-          <MatchInfograph
-            userData={userData}
-            matchData={matchData}
-            opportunity={opportunity}
-          />
-        ) : (
-          <CircularProgress style={{ color: "#CDDC39" }} />
-        )}
+        <Fade in={step === 2}>
+          {opportunity === "" && step === 2 ? (
+            <GetDesiredJob parentCallback={callback_opportunity} />
+          ) : userData?.name !== undefined &&
+            matchData?.global_match_score !== undefined ? (
+            <MatchInfograph
+              userData={userData}
+              matchData={matchData}
+              opportunity={opportunity}
+            />
+          ) : (
+            <CircularProgress style={{ color: "#CDDC39" }} />
+          )}
+        </Fade>
       </div>
     </div>
   );

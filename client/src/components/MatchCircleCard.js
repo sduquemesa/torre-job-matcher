@@ -87,7 +87,7 @@ function ArcPlot(props) {
               {
                 value: props.valueToRender * 2 * PI,
                 radius0: 1.75,
-                radius: 1.6,
+                radius: 1.7,
               },
             ]}
           />

@@ -1,11 +1,13 @@
 import React from "react";
+import axios from "axios";
 import "./App.css";
 
 import GetUsername from "./components/GetUsername.js";
 import GetDesiredJob from "./components/GetDesiredJob.js";
+import UserProfile from "./components/UserProfile.js";
 
 export default function App() {
-  const [oportunity, setOportunity] = React.useState("");
+  const [opportunity, setOportunity] = React.useState("");
   const callback_opportunity = (data) => {
     setOportunity(data.name);
     console.log("callback_opportunity", data);
@@ -17,15 +19,34 @@ export default function App() {
     console.log("callback_username", data);
   };
 
+  const [userData, setUserData] = React.useState({});
+  const [jobData, setJobData] = React.useState({});
   const [matchData, setMatchData] = React.useState({});
+
+  React.useEffect(() => {
+    (async () => {
+      const { data } = await axios.get(
+        `https://torre-job-matcher.rj.r.appspot.com/api/user/${username}`
+      );
+      setUserData(data);
+    })();
+  }, [username]);
 
   return (
     <div className="App">
       <div className="user-container">
-        <GetUsername parentCallback={callback_username} />
+        {username === "" ? (
+          <GetUsername parentCallback={callback_username} />
+        ) : (
+          <UserProfile userData={userData} />
+        )}
       </div>
       <div className="job-container">
-        <GetDesiredJob parentCallback={callback_opportunity} />
+        {opportunity === "" ? (
+          <GetDesiredJob parentCallback={callback_opportunity} />
+        ) : (
+          <p>{opportunity}</p>
+        )}
       </div>
     </div>
   );

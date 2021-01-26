@@ -152,7 +152,6 @@ export default function InputForm(props) {
         <Fab
           aria-label="submit"
           className={classes.fab}
-          aria-label="submit"
           disableRipple={true}
           onClick={() => {
             props.parentCallback(value);

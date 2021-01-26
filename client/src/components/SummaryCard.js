@@ -22,7 +22,7 @@ export default function SummaryCard(props) {
           Summary of job listings
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          The most representative phrases in the job texts
+          The most representative phrases in the job texts.
         </Typography>
         <Typography style={{ whiteSpace: "pre-line" }} variant="body2">
           <ul>

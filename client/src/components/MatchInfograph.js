@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 
 import MatchCircleCard from "./MatchCircleCard.js";
 import SummaryCard from "./SummaryCard.js";
+import StrengthsCard from "./StrenghtsCard.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,7 +63,12 @@ export default function MatchInfograph(props) {
             </div>
           </Grid>
           <Grid item xs={7} sm={7}>
-            <Paper className={classes.paper}>xs=12 sm=6</Paper>
+            <StrengthsCard
+              strengthStats={props.matchData.strenght_stats}
+              userStrengths={props.userData.strengths}
+              keywords={props.matchData.keywords}
+              className={classes.paper}
+            />
           </Grid>
           <Grid item xs={12} sm={12}>
             <SummaryCard phrases={props.matchData.summary} />

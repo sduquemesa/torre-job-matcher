@@ -1,9 +1,17 @@
 import InputForm from "./InputForm.js";
+import Typography from "@material-ui/core/Typography";
 
 export default function GetDesiredJob(props) {
   return (
     <div className="question">
-      <h1>What do you want to become?</h1>
+      <Typography
+        variant="h2"
+        color="textPrimary"
+        component="p"
+        style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+      >
+        What do you want to become?
+      </Typography>
       <InputForm
         label="Skill/Opportunity"
         search_type={"opportunity"}

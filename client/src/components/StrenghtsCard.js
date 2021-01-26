@@ -1,14 +1,17 @@
+import React from "react";
 import Card from "@material-ui/core/Card";
+import Paper from "@material-ui/core/Paper";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import Chip from "@material-ui/core/Chip";
 
 import { XYPlot, MarkSeries, LabelSeries } from "react-vis";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     // justifyContent: "space-evenly",
@@ -32,14 +35,24 @@ const useStyles = makeStyles({
     margin: "auto",
     // backgroundColor: "green",
   },
-});
+  chiplist: {
+    display: "flex",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    listStyle: "none",
+    padding: theme.spacing(0.5),
+    margin: 0,
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+}));
 
 function randomFloat(min, max) {
   return min + (max - min) * Math.random();
 }
 
 function BubblePlot(props) {
-  console.log(props.strengthStats, props.userStrengths);
   const data_in = props.strengthStats
     .filter((strength) => {
       return props.userStrengths.includes(strength.name);
@@ -47,7 +60,7 @@ function BubblePlot(props) {
     .map((strength) => {
       return {
         x: randomFloat(1, 4),
-        y: randomFloat(2, 20),
+        y: randomFloat(1, 4),
         label: strength.name,
         size: strength.frequency,
       };
@@ -60,7 +73,7 @@ function BubblePlot(props) {
     .map((strength) => {
       return {
         x: randomFloat(1, 4),
-        y: randomFloat(2, 20),
+        y: randomFloat(1, 4),
         label: strength.name,
         size: strength.frequency,
       };
@@ -69,7 +82,7 @@ function BubblePlot(props) {
   const data_kwds = props.keywords.map((kwd) => {
     return {
       x: randomFloat(1, 4),
-      y: randomFloat(2, 20),
+      y: randomFloat(1, 4),
       label: kwd,
       size: 1,
     };
@@ -77,14 +90,15 @@ function BubblePlot(props) {
 
   return (
     <XYPlot
-      yDomain={[0, 22]}
       xDomain={[0, 5]}
+      yDomain={[0, 5]}
       width={props.size.width}
       height={props.size.height}
     >
       <MarkSeries
         className="bubble-chart"
-        strokeWidth={2}
+        strokeWidth={1}
+        stroke="#322214"
         sizeRange={[5, 30]}
         data={data_in}
         color="#CDDC39"
@@ -98,7 +112,8 @@ function BubblePlot(props) {
       />
       <MarkSeries
         className="bubble-chart"
-        strokeWidth={2}
+        strokeWidth={1}
+        stroke="#322214"
         sizeRange={[5, 30]}
         data={data_out}
         color="#EF476F"
@@ -112,7 +127,8 @@ function BubblePlot(props) {
       />
       <MarkSeries
         className="bubble-chart"
-        strokeWidth={2}
+        strokeWidth={1}
+        stroke="#322214"
         sizeRange={[5, 30]}
         data={data_kwds}
         color="#00ACC1"
@@ -125,6 +141,62 @@ function BubblePlot(props) {
         labelAnchorY="start"
       />
     </XYPlot>
+  );
+}
+
+function ChipList(props) {
+  const classes = useStyles();
+  const chipData = props.strengthStats
+    .filter((strength) => {
+      return props.userStrengths.includes(strength.name);
+    })
+    .map((strength) => {
+      return {
+        label: strength.name,
+        key: `${strength.name}-chip`,
+      };
+    });
+
+  const data_out = props.strengthStats
+    .filter((strength) => {
+      return !props.userStrengths.includes(strength.name);
+    })
+    .map((strength) => {
+      return {
+        label: strength.name,
+      };
+    });
+
+  const data_kwds = props.keywords;
+
+  return (
+    <Paper component="ul" className={classes.chiplist}>
+      {chipData.map((data) => {
+        return (
+          <li key={data.key}>
+            <Chip label={data.label} className={classes.chip} color="primary" />
+          </li>
+        );
+      })}
+      {data_out.map((data) => {
+        return (
+          <li key={data.key}>
+            <Chip
+              label={data.label}
+              className={classes.chip}
+              color="secondary"
+            />
+          </li>
+        );
+      })}
+      {data_kwds.map((data) => {
+        return (
+          <li key={data}>
+            <Chip label={data} className={classes.chip} variant="outlined" />
+          </li>
+        );
+      })}
+    </Paper>
   );
 }
 
@@ -156,14 +228,19 @@ export default function MatchCircleCard(props) {
           required strenghts.
         </Typography>
       </CardContent>
-      {parentSize ? (
+      {/* {parentSize ? (
         <BubblePlot
           strengthStats={props.strengthStats}
           userStrengths={props.userStrengths}
           keywords={props.keywords}
           size={parentSize}
         />
-      ) : null}
+      ) : null} */}
+      <ChipList
+        strengthStats={props.strengthStats}
+        userStrengths={props.userStrengths}
+        keywords={props.keywords}
+      />
     </Card>
   );
 }

@@ -54,15 +54,15 @@ export default function MatchInfograph(props) {
         </Typography>
       </div>
       <div className={classes.infogrid}>
-        <Grid container spacing={3} alignItems="stretch">
-          <Grid item xs={5}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={12} md={6}>
             <div>
               <MatchCircleCard
                 matchScore={props.matchData.global_match_score}
               />
             </div>
           </Grid>
-          <Grid item xs={7} sm={7}>
+          <Grid item xs={12} sm={7}>
             <StrengthsCard
               strengthStats={props.matchData.strenght_stats}
               userStrengths={props.userData.strengths}

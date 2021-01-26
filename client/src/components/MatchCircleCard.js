@@ -11,6 +11,7 @@ const PI = Math.PI;
 const useStyles = makeStyles({
   root: {
     width: "100%",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-evenly",
@@ -28,6 +29,7 @@ const useStyles = makeStyles({
     margin: "auto",
   },
   plot: {
+    position: "relative",
     width: "100%",
     height: "100%",
     margin: "auto",
@@ -124,10 +126,22 @@ export default function MatchCircleCard(props) {
         <Typography color="textSecondary" gutterBottom>
           How well you match the job listings.
         </Typography>
+        <Typography
+          variant="h1"
+          color="textSecondary"
+          // className={classes.textValue}
+        >
+          <CountUp
+            start={Math.round(props.matchScore * 100) - 20}
+            end={Math.round(props.matchScore * 100)}
+            suffix="%"
+            useEasing
+          />
+        </Typography>
       </CardContent>
-      {parentSize ? (
-        <ArcPlot valueToRender={props.matchScore} size={parentSize} />
-      ) : null}
+      {/* {parentSize ? (
+        // <ArcPlot valueToRender={props.matchScore} size={parentSize} />
+      ) : null} */}
     </Card>
   );
 }

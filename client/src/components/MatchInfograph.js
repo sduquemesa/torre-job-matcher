@@ -8,6 +8,7 @@ import MatchCircleCard from "./MatchCircleCard.js";
 import SummaryCard from "./SummaryCard.js";
 import StrengthsCard from "./StrenghtsCard.js";
 import TopJobsCard from "./TopJobsCard.js";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,7 @@ export default function MatchInfograph(props) {
           <Grid item xs={12} sm={12}>
             <SummaryCard phrases={props.matchData.summary} />
           </Grid>
+          {/* <Divider /> */}
           <TopJobsCard topJobs={props.matchData.job_score} />
         </Grid>
       </div>

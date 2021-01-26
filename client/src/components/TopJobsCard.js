@@ -94,33 +94,22 @@ function JobCard(props) {
           <Typography variant="body2" color="textSecondary">
             Match: {Math.round(props.jobScore * 100)}%
           </Typography>
-          <ChipList strengths={jobData.strengths} />
+          {jobData?.strengths !== undefined ? (
+            <ChipList strengths={jobData.strengths} />
+          ) : null}
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary" onClick={handleExpandClick}>
-          {expanded ? "Less" : "Learn More"}
-        </Button>
         <Button size="small" color="primary">
           <a
             href={`https://torre.co/jobs/${jobData.job_id}`}
             target="_blank"
             style={{ textDecoration: "none" }}
           >
-            visit
+            Learn More
           </a>
         </Button>
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          component="ul"
-          style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
-        >
-          {jobData.details}
-        </Typography>
-      </Collapse>
     </Card>
   );
 }
@@ -131,7 +120,7 @@ export default function TopJobsCard(props) {
     <>
       {props.topJobs.slice(0, 4).map((job) => {
         return (
-          <Grid item xs={12} sm={6} lg={3}>
+          <Grid item xs={12} md={6} xl={3}>
             <JobCard jobId={job.id} jobScore={job.score} />
           </Grid>
         );

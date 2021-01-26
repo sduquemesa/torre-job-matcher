@@ -6,6 +6,8 @@ import GetUsername from "./components/GetUsername.js";
 import GetDesiredJob from "./components/GetDesiredJob.js";
 import UserProfile from "./components/UserProfile.js";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 export default function App() {
   const [opportunity, setOportunity] = React.useState("");
   const callback_opportunity = (data) => {
@@ -37,8 +39,10 @@ export default function App() {
       <div className="user-container">
         {username === "" ? (
           <GetUsername parentCallback={callback_username} />
-        ) : (
+        ) : userData?.username ? (
           <UserProfile userData={userData} />
+        ) : (
+          <CircularProgress style={{ color: "#CDDC39" }} />
         )}
       </div>
       <div className="job-container">

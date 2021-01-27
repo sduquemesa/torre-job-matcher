@@ -4,7 +4,7 @@
 
 ## About The Project
 
-![Alt text](/UI design/screenshots/Desktop/results-frame.png?raw=true "UI")
+![Alt text](./UI design/screenshots/Desktop/results-frame.png?raw=true "UI")
 
 This app is an analytics tool that allows Torre users to match their genome to job listings as well suggesting
 possible new skills, phrases and keywords to better match their CV to a desired job or opportunity. To

@@ -51,17 +51,20 @@ export default function App() {
 
   return (
     <div className="App">
-      <div className="user-container">
-        {username === "" ? (
-          <Fade in={step === 1}>
-            <GetUsername parentCallback={callback_username} />
-          </Fade>
-        ) : userData?.username ? (
+      {username === "" ? (
+        <div className={"user-container-question"}>
+          <GetUsername parentCallback={callback_username} />
+        </div>
+      ) : userData?.username ? (
+        <div className={"user-container"}>
           <UserProfile userData={userData} />
-        ) : (
+        </div>
+      ) : (
+        <div className={"user-container-question"}>
           <CircularProgress style={{ color: "#CDDC39" }} />
-        )}
-      </div>
+        </div>
+      )}
+
       <div className="job-container">
         <Fade in={step === 2}>
           {opportunity === "" && step === 2 ? (

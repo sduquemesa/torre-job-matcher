@@ -19,10 +19,10 @@ export default function SummaryCard(props) {
     <Card className={classes.root}>
       <CardContent>
         <Typography variant="h6" color="textPrimary">
-          Summary of job listings
+          Summary
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          The most representative phrases in the job texts.
+          Most frequent phrases in job offers
         </Typography>
         <Typography style={{ whiteSpace: "pre-line" }} variant="body2">
           <ul>

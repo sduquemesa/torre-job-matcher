@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-evenly",
     width: "90%",
     height: "80%",
     "& > *": {
@@ -63,7 +62,6 @@ export default function UserProfile(props) {
       >
         {props.userData.summaryOfBio}
       </Typography>
-      <Divider />
     </Paper>
   );
 }

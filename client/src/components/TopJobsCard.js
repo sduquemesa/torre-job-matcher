@@ -71,26 +71,26 @@ function JobCard(props) {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          alt={jobData.objective}
-          height="140"
-          image={jobData.cover_img}
-          title={jobData.objective}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+      <CardMedia
+        component="img"
+        alt={jobData.objective}
+        height="140"
+        image={jobData.cover_img}
+        title={jobData.objective}
+      />
+      <CardContent className={classes.root}>
+        <div>
+          <Typography gutterBottom variant="subtitle2" component="h2">
             {jobData.objective}
           </Typography>
           <Typography variant="body2" color="textSecondary">
             Match: {Math.round(props.jobScore * 100)}%
           </Typography>
-          {jobData?.strengths !== undefined ? (
-            <ChipList strengths={jobData.strengths} />
-          ) : null}
-        </CardContent>
-      </CardActionArea>
+        </div>
+        {jobData?.strengths !== undefined ? (
+          <ChipList strengths={jobData.strengths} />
+        ) : null}
+      </CardContent>
       <CardActions>
         <Button size="small" color="primary">
           <a
@@ -110,9 +110,9 @@ export default function TopJobsCard(props) {
   return (
     // <Grid container spacing={3}>
     <>
-      {props.topJobs.slice(0, 4).map((job) => {
+      {props.topJobs.slice(0, 6).map((job) => {
         return (
-          <Grid item xs={12} md={6} xl={3}>
+          <Grid item xs={12} md={4} xl={3}>
             <JobCard jobId={job.id} jobScore={job.score} />
           </Grid>
         );

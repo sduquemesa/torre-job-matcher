@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
 import { XYPlot, MarkSeries, LabelSeries } from "react-vis";
 
@@ -43,6 +44,13 @@ const useStyles = makeStyles((theme) => ({
   },
   chip: {
     margin: theme.spacing(0.5),
+  },
+  breadcrumbs: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: "10px",
+    marginBottom: "10px",
   },
 }));
 
@@ -168,7 +176,7 @@ function ChipList(props) {
   const data_kwds = props.keywords;
 
   return (
-    <Paper component="ul" className={classes.chiplist}>
+    <Paper component="ul" className={classes.chiplist} elevation={0}>
       {chipData.map((data) => {
         return (
           <li key={data.key}>
@@ -187,13 +195,13 @@ function ChipList(props) {
           </li>
         );
       })}
-      {data_kwds.map((data) => {
+      {/* {data_kwds.map((data) => {
         return (
           <li key={data}>
             <Chip label={data} className={classes.chip} variant="outlined" />
           </li>
         );
-      })}
+      })} */}
     </Paper>
   );
 }
@@ -222,8 +230,7 @@ export default function MatchCircleCard(props) {
           Keywords & Strenghts
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          This are the most representative words in the job listings and the
-          required strenghts.
+          Skills recruiters and companies are looking for
         </Typography>
       </CardContent>
       {/* {parentSize ? (
@@ -239,6 +246,34 @@ export default function MatchCircleCard(props) {
         userStrengths={props.userStrengths}
         keywords={props.keywords}
       />
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        className={classes.breadcrumbs}
+        separator="    "
+      >
+        <>
+          <Chip
+            label="  "
+            className={classes.chip}
+            color="primary"
+            size="small"
+          />
+          <Typography color="textSecondary" gutterBottom>
+            In Genome!
+          </Typography>
+        </>
+        <>
+          <Chip
+            label=""
+            className={classes.chip}
+            color="secondary"
+            size="small"
+          />
+          <Typography color="textSecondary" gutterBottom>
+            Is Missing
+          </Typography>
+        </>
+      </Breadcrumbs>
     </Card>
   );
 }

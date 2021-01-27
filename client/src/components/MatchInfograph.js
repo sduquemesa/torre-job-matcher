@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-
+import SearchIcon from "@material-ui/icons/Search";
 import MatchCircleCard from "./MatchCircleCard.js";
 import SummaryCard from "./SummaryCard.js";
 import StrengthsCard from "./StrenghtsCard.js";
@@ -31,8 +31,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
   title: {
-    textAlign: "right",
     marginTop: "20px",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  icon: {
+    fontSize: "2rem",
+    marginRight: "10px",
   },
 }));
 
@@ -42,16 +49,9 @@ export default function MatchInfograph(props) {
   return (
     <Paper className={classes.root} elevation={0}>
       <div className={classes.title}>
-        {/* <Typography
-          variant="h5"
-          color="textSecondary"
-          component="p"
-          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
-        >
-          your career pathway
-        </Typography> */}
+        <SearchIcon className={classes.icon} />
         <Typography
-          variant="h2"
+          variant="h4"
           color="textPrimary"
           component="p"
           style={{ whiteSpace: "pre-line" }}
@@ -75,7 +75,25 @@ export default function MatchInfograph(props) {
           <Grid item xs={12}>
             <SummaryCard phrases={props.matchData.summary} />
           </Grid>
-          {/* <Divider /> */}
+          <Grid item xs={12}>
+            <Divider style={{ marginBottom: "20px" }} />
+            <Typography
+              variant="h3"
+              color="textPrimary"
+              component="p"
+              style={{ whiteSpace: "pre-line" }}
+            >
+              Top matches
+            </Typography>
+            <Typography
+              variant="h4"
+              color="textSecondary"
+              component="p"
+              style={{ whiteSpace: "pre-line" }}
+            >
+              Opportunities fitting your genome
+            </Typography>
+          </Grid>
           <TopJobsCard topJobs={props.matchData.job_score} />
         </Grid>
       </div>

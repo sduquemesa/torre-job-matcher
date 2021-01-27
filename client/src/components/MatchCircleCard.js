@@ -108,7 +108,7 @@ export default function MatchCircleCard(props) {
           Match Score
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          How well you match the job listings.
+          How close you are
         </Typography>
       </CardContent>
       <Typography

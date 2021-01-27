@@ -30,7 +30,7 @@ If you have a verified account at Torre and alredy filled your genome info, chec
 - [Python 3](https://www.python.org/)
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/)
 - [GENSIM](https://radimrehurek.com/gensim/)
-- [NLTK] (https://www.nltk.org/)
+- [NLTK](https://www.nltk.org/)
 
 #### Frontend
 

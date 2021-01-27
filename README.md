@@ -36,3 +36,37 @@ If you have a verified account at Torre and alredy filled your genome info, chec
 
 - [ReactJS](https://reactjs.org/)
 - [MATERIAL-UI](https://material-ui.com/)
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+Setting up your project locally.
+To get a local copy up and running follow these steps.
+
+### Installation
+
+1.  ```sh
+    git clone https://github.com/sduquemesa/torre-job-matcher.git
+    ```
+2.  Install NPM packages
+    ```sh
+    cd server && npm install && cd ..;
+    cd client && npm install && cd ..;
+    ```
+3.  Create python virtual environment
+    ```sh
+    cd ml-server && python3 -m venv env;
+    source env/bin/activate;
+    pip install -r requirements.txt;
+    ```
+
+<!-- USAGE EXAMPLES -->
+
+## Usage
+
+To see how to run each service go to the respective folder
+
+- [Backend](server/)
+- [Frontend](client/)
+- [ML service](ml-server/)

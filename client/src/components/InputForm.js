@@ -1,114 +1,165 @@
-import axios from 'axios';
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import axios from "axios";
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+
+import Fab from "@material-ui/core/Fab";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+
+InputForm.propTypes = {
+  search_type: PropTypes.string,
+  label: PropTypes.string,
+  parentCallback: PropTypes.func,
+};
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(2),
+    },
+  },
+  fab: {
+    background: "transparent",
+    float: "right",
+    marginTop: "10px",
+  },
+}));
 
 export default function InputForm(props) {
-    const [open, setOpen] = React.useState(false);
-    const [options, setOptions] = React.useState([]);
-    const [text, setText] = React.useState('');
-    const [selectedOption, setSelectedOption] = React.useState('');
-    const loading = open && options.length === 0;
+  const [open, setOpen] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
+  const [value, setValue] = React.useState("");
+  const [inputValue, setInputValue] = React.useState("");
 
-    React.useEffect(() => {
-        let active = true;
+  const loading = open && options.length === 0;
 
-        // if (!loading) {
-        //     return undefined;
-        // }
+  const classes = useStyles();
 
-        (async () => {
+  React.useEffect(() => {
+    let active = true;
 
-            let suggestions = [];
-            if (props.search_type === 'opportunity') {
-                const response = await axios.get(`https://torre.co/api/strengths?limit=5&q=${text}&context=add-opportunity&locale=en`);
-                // console.log(response.data);
-                suggestions = response.data.map(val => {return {name: val.term}});
-                // console.log(suggestions);
-            } else if (props.search_type === 'people') {
-                const response = await axios({
-                    method: 'post',
-                    url: `https://search.torre.co/people/_search/?size=5&lang=en&aggregate=false&offset=0`,
-                    headers: {},
-                    data: {"name":{"term":text}}
-                });
-                // console.log(response.data.results);
-                suggestions = response.data.results.map(val => {return {name: val.name, username: val.username}});
-            }
+    (async () => {
+      let suggestions = [];
+      if (props.search_type === "opportunity") {
+        const response = await axios.get(
+          `https://torre.co/api/strengths?limit=5&q=${inputValue}&context=add-opportunity&locale=en`
+        );
+        suggestions = response.data.map((val) => {
+          return { name: val.term };
+        });
+      } else if (props.search_type === "people") {
+        const response = await axios.get(
+          `https://torre-job-matcher.rj.r.appspot.com/api/users/?text=${inputValue}&size=5&offset=0`
+        );
+        suggestions = response.data;
+      }
 
-            if (active) {
-                setOptions(suggestions);
-            }
+      if (active) {
+        setOptions(suggestions);
+      }
+    })();
 
-        })();
+    return () => {
+      active = false;
+    };
+  }, [props.search_type, loading, value, inputValue]);
 
-        return () => {
-            active = false;
-        };
-    }, [text, props.search_type]);
-
-    React.useEffect(() => {
-        if (!open) {
-            setOptions([]);
-        }
-    }, [open]);
-
-    // const handleKeyDown = (event) => {
-
-    //         (props.search_type === 'opportunity') ? props.parentCallback(event.target.value) : props.parentCallback(selectedOption);
-    //         console.log(selectedOption);
-
-    // }
-
-    const getSelectedOption = (option, value) => {
-       if (option.name === value.name) {
-            // setSelectedOption(option.username)
-            (props.search_type === 'opportunity') ? props.parentCallback(option.name) : props.parentCallback(option.username);
-            return true;
-       } else {
-            return false;
-       }
+  React.useEffect(() => {
+    if (!open) {
+      setOptions([]);
     }
+  }, [open]);
 
-    return (
-        <Autocomplete
-            id={`${props.search_type}-textfield`}
-            autoComplete={true}
-            autoSelect={true}
-            style={{width: '800px', paddingBottom: '1rem'}}
-            open={open}
-            onOpen={() => {
-                setOpen(true);
+  return (
+    <>
+      <Autocomplete
+        id={`input-${props.search_type}`}
+        autoComplete={true}
+        autoHighlight={true}
+        autoSelect={true}
+        // style={}
+        open={open}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        getOptionSelected={(option, value) => {
+          if (value.name !== undefined) {
+            return option.name === value.name;
+          } else {
+            return false;
+          }
+        }}
+        getOptionLabel={(option) => (option?.name ? option.name : "")}
+        options={options}
+        loading={loading}
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={props.label}
+            variant="outlined"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <React.Fragment>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </React.Fragment>
+              ),
             }}
-            onClose={(event) => {
-                setOpen(false);
-                // setText(event.target.value)
-            }}
-            getOptionSelected={getSelectedOption}
-            getOptionLabel={(option) => option.name}
-            options={options}
-            loading={loading}
-            // onChange={(event)=>{
-            //     console.log(event.target);setText(event.target)}}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label={props.label}
-                    variant="outlined"
-                    InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                            <React.Fragment>
-                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                                {params.InputProps.endAdornment}
-                            </React.Fragment>
-                        ),
-                    }}
-                    // onKeyDown={(event)=>handleKeyDown(event)}
-                    
-                />
-            )}
-        />
-    );
+          />
+        )}
+        renderOption={(option) => (
+          <Grid container alignItems="center" className={classes.root}>
+            {option?.username ? (
+              <Grid item>
+                <Avatar alt={option.name} src={`${option.picture}`} />
+              </Grid>
+            ) : null}
+            <Grid item xs>
+              <span key={`text-${option.name}`} style={{ fontWeight: 400 }}>
+                {option.name}
+              </span>
+
+              <Typography variant="body2" color="textSecondary">
+                {option?.username ? <span>{option.username}</span> : null}
+              </Typography>
+            </Grid>
+          </Grid>
+        )}
+      />
+      <Tooltip title={`Sumbmit ${props.search_type}`} aria-label="submit">
+        <Fab
+          aria-label="submit"
+          className={classes.fab}
+          disableRipple={true}
+          onClick={() => {
+            props.parentCallback(value);
+          }}
+        >
+          <NavigateNextIcon style={{ color: "#322214" }} />
+        </Fab>
+      </Tooltip>
+    </>
+  );
 }

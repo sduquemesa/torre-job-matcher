@@ -2,7 +2,7 @@ import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
 import {IUserData, IJobData, ISearchData, ISearchQueryParams, IMatchQueryParams, IMatchData} from './types';
-import {UsersWorker, JobsWorker, SearchWorker, MatchWorker } from './controllers';
+import {UsersWorker, JobsWorker, SearchWorker, MatchWorker, UserSearchWorker } from './controllers';
 
 // Create Express app
 const app: Express = express();
@@ -38,10 +38,32 @@ var server = app.listen(app.get('port'), function () {
 // Get user info
 app.get('/api/user/:username',
   async (inRequest: Request, inResponse: Response) => {
-    console.log(`GET /api/users/${inRequest.params.username}`);
+    console.log(`GET /api/user/${inRequest.params.username}`);
     try {
       const userWorker: UsersWorker = new UsersWorker(inRequest.params.username);
       const user_data: IUserData | undefined = await userWorker.getUserData();
+      inResponse.json(user_data);
+    } catch (error) {
+      console.log(error);
+      inResponse.send('error');
+    }
+  }
+);
+
+// Get users suggestions
+app.get('/api/users/',
+  async (inRequest: Request, inResponse: Response) => {
+    console.log(`GET /api/users/${inRequest.params}`);
+    try {
+      const query_params: ISearchQueryParams = {
+        text_query: inRequest.query.text,
+        size: inRequest.query.size,
+        offset: inRequest.query.offset,
+        aggregate: inRequest.query.aggregate,
+        lang: inRequest.query.lang
+      }
+      const userSearchWorker: UserSearchWorker = new UserSearchWorker(query_params);
+      const user_data: IUserData[] | undefined = await userSearchWorker.getUserSuggest();
       inResponse.json(user_data);
     } catch (error) {
       console.log(error);
